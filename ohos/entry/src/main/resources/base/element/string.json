@@ -1,0 +1,21 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "Flutter HarmonyOS Demo Module"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Flutter HarmonyOS Demo Entry Ability"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "HarmonyFlutterDemo"
+    },
+    {
+      "name": "permission_internet_reason",
+      "value": "需要网络权限以支持 Flutter 应用运行"
+    }
+  ]
+}
+
