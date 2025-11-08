@@ -1,8 +1,9 @@
 # 如何让 Cursor 精通鸿蒙开发？
 
+> **参考文档** - 本文档为参考资源，帮助理解如何配置 Cursor  
 > 原文作者：北极的树  
 > 原文链接：https://mp.weixin.qq.com/s/gLgP7gGU0pmGc2x1hS-0UQ  
-> 项目地址：https://github.com/skindhu/harmony-cursor-rules
+> 相关工具：https://github.com/skindhu/harmony-cursor-rules（非本项目，为第三方开源工具）
 
 ## 📋 概述
 
