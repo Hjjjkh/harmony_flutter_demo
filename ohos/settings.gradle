@@ -1,0 +1,8 @@
+// HarmonyOS 项目设置
+// 注意：HarmonyOS 项目主要使用 hvigor 构建系统
+// 此文件用于 Gradle 兼容（如果使用）
+
+rootProject.name = 'harmony_flutter_demo'
+
+include ':entry'
+

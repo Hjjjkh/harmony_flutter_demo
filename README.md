@@ -253,6 +253,29 @@ harmony_flutter_demo/
 3. **权限请求** - 请求系统权限
 4. **分布式能力** - 调用鸿蒙分布式能力
 
+## 📦 打包 HAP
+
+### 快速打包
+
+```powershell
+# 使用自动化脚本
+.\scripts\build_hap.ps1 -Mode release
+```
+
+### 详细步骤
+
+1. **构建 Flutter 资源**
+   ```bash
+   flutter build bundle --release
+   ```
+
+2. **使用 DevEco Studio 打包 HAP**
+   - 打开 DevEco Studio
+   - 打开 `ohos` 目录
+   - 选择 Build -> Build Hap(s)
+
+详细说明请参考：[HAP 打包指南](docs/HAP_BUILD_GUIDE.md)
+
 ---
 
 ## 💰 开发者激励

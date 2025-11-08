@@ -1,0 +1,26 @@
+// HarmonyOS 项目构建配置
+// 注意：HarmonyOS 项目主要使用 hvigor 构建系统
+// 此文件用于 Gradle 兼容（如果使用）
+
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+    }
+    dependencies {
+        // HarmonyOS 构建插件
+        // classpath 'com.huawei.ohos:hvigor-ohos-plugin:3.0.0'
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+

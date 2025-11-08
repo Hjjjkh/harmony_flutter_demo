@@ -16,7 +16,8 @@ function Show-Menu {
     Write-Host "6. 分析代码" -ForegroundColor White
     Write-Host "7. 构建应用 (APK)" -ForegroundColor White
     Write-Host "8. 运行 Flutter 应用" -ForegroundColor White
-    Write-Host "9. 查看项目信息" -ForegroundColor White
+    Write-Host "9. 打包 HAP" -ForegroundColor White
+    Write-Host "10. 查看项目信息" -ForegroundColor White
     Write-Host "0. 退出" -ForegroundColor White
     Write-Host ""
 }
@@ -78,6 +79,14 @@ function Analyze-Code {
 function Build-App {
     Write-Host "正在构建应用..." -ForegroundColor Yellow
     & "$PSScriptRoot\build_flutter.ps1" -Platform apk -Mode release
+    Write-Host ""
+    Write-Host "按任意键继续..." -ForegroundColor Gray
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+}
+
+function Build-HAP {
+    Write-Host "正在打包 HAP..." -ForegroundColor Yellow
+    & "$PSScriptRoot\build_hap.ps1" -Mode release
     Write-Host ""
     Write-Host "按任意键继续..." -ForegroundColor Gray
     $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
@@ -146,7 +155,8 @@ do {
         "6" { Analyze-Code }
         "7" { Build-App }
         "8" { Run-FlutterApp }
-        "9" { Show-ProjectInfo }
+        "9" { Build-HAP }
+        "10" { Show-ProjectInfo }
         "0" { 
             Write-Host "退出..." -ForegroundColor Yellow
             break 

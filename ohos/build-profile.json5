@@ -1,6 +1,10 @@
 {
   "apiType": "stageMode",
-  "buildOption": {},
+  "buildOption": {
+    "arkOptions": {
+      "runtimeOnly": false
+    }
+  },
   "modules": [
     {
       "name": "entry",
