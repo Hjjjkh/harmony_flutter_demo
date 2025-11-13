@@ -13,12 +13,8 @@
         "targets": [
           "default"
         ],
-        "compileSdkVersion": {
-          "apiVersion": 11
-        },
-        "compatibleSdkVersion": {
-          "apiVersion": 10
-        }
+        "compileSdkVersion": 11,
+        "compatibleSdkVersion": 10
       }
     ]
   },

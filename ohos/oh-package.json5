@@ -1,4 +1,5 @@
 {
+  "modelVersion": "6.0.0",
   "app": {
     "bundleName": "com.hjjjkh.harmonyflutterdemo",
     "vendor": "Hjjjkh",
@@ -8,4 +9,3 @@
     }
   }
 }
-
