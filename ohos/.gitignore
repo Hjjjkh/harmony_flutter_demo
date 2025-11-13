@@ -1,6 +1,6 @@
 # HarmonyOS build files
 build/
-.hvigor/
+.hvigor/node_modules/
 .hvigorw
 local.properties
 

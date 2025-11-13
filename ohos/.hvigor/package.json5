@@ -1,0 +1,8 @@
+{
+  "name": "hvigor-config",
+  "version": "1.0.0",
+  "dependencies": {
+    "@ohos/hvigor-ohos-plugin": "5.0.0"
+  }
+}
+

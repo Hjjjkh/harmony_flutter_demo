@@ -1,0 +1,9 @@
+{
+  "name": "harmony_flutter_demo",
+  "version": "1.0.0",
+  "description": "Root config for hvigor",
+  "dependencies": {
+    "@ohos/hvigor": "file:./.hvigor"
+  }
+}
+

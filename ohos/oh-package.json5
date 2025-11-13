@@ -1,0 +1,11 @@
+{
+  "app": {
+    "bundleName": "com.hjjjkh.harmonyflutterdemo",
+    "vendor": "Hjjjkh",
+    "version": {
+      "code": 1000000,
+      "name": "1.0.0"
+    }
+  }
+}
+

@@ -5,6 +5,7 @@
 ## 📁 目录说明
 
 - `AppScope/` - 应用级配置和资源
+- `.hvigor/` - hvigor 构建系统配置（DevEco Studio 同步所需）
 - `entry/` - 应用入口模块
   - `src/main/ets/` - ArkTS 源代码
   - `src/main/resources/` - 资源文件
