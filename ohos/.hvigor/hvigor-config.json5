@@ -1,9 +1,9 @@
 {
-  "hvigorVersion": "5.0.0",
+  "hvigorVersion": "6.0.0",
   "accessors": [
     {
       "name": "system",
-      "dependency": "@ohos/hvigor-ohos-plugin@5.0.0",
+      "dependency": "@ohos/hvigor-ohos-plugin@6.0.0",
       "default": true
     }
   ]
