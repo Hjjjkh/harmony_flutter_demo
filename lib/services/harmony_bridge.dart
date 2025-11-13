@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 /// 鸿蒙平台桥接服务
 /// 用于 Flutter 与鸿蒙原生代码通信
 class HarmonyBridge {
-  static const MethodChannel _channel = MethodChannel('com.example.harmony_flutter_demo/harmony_bridge');
+  static const MethodChannel _channel = MethodChannel(
+    'com.example.harmony_flutter_demo/harmony_bridge',
+  );
 
   /// 获取设备信息
   static Future<Map<String, dynamic>?> getDeviceInfo() async {
@@ -51,7 +53,10 @@ class HarmonyBridge {
   }
 
   /// 调用鸿蒙分布式能力
-  static Future<bool> callDistributedAbility(String action, Map<String, dynamic>? params) async {
+  static Future<bool> callDistributedAbility(
+    String action,
+    Map<String, dynamic>? params,
+  ) async {
     try {
       final result = await _channel.invokeMethod('callDistributedAbility', {
         'action': action,
@@ -66,4 +71,3 @@ class HarmonyBridge {
     }
   }
 }
-

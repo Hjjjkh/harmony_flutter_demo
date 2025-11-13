@@ -25,7 +25,7 @@ class _HarmonyDemoPageState extends State<HarmonyDemoPage> {
     });
 
     final info = await HarmonyBridge.getDeviceInfo();
-    
+
     setState(() {
       _deviceInfo = info;
       _isLoading = false;
@@ -39,23 +39,21 @@ class _HarmonyDemoPageState extends State<HarmonyDemoPage> {
     );
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(success ? '通知已发送' : '通知发送失败'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(success ? '通知已发送' : '通知发送失败')));
     }
   }
 
   Future<void> _requestPermission() async {
-    final granted = await HarmonyBridge.requestPermission('ohos.permission.INTERNET');
-    
+    final granted = await HarmonyBridge.requestPermission(
+      'ohos.permission.INTERNET',
+    );
+
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(granted ? '权限已授予' : '权限被拒绝'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(granted ? '权限已授予' : '权限被拒绝')));
     }
   }
 
@@ -89,21 +87,23 @@ class _HarmonyDemoPageState extends State<HarmonyDemoPage> {
                     if (_isLoading)
                       const Center(child: CircularProgressIndicator())
                     else if (_deviceInfo != null)
-                      ..._deviceInfo!.entries.map((entry) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  entry.key,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                      ..._deviceInfo!.entries.map(
+                        (entry) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                entry.key,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                Text(entry.value.toString()),
-                              ],
-                            ),
-                          ))
+                              ),
+                              Text(entry.value.toString()),
+                            ],
+                          ),
+                        ),
+                      )
                     else
                       const Text('无法获取设备信息'),
                   ],
@@ -173,4 +173,3 @@ class _HarmonyDemoPageState extends State<HarmonyDemoPage> {
     );
   }
 }
-

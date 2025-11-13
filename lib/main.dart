@@ -51,18 +51,11 @@ class MainPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.phone_android,
-              size: 64,
-              color: Colors.deepPurple,
-            ),
+            const Icon(Icons.phone_android, size: 64, color: Colors.deepPurple),
             const SizedBox(height: 24),
             const Text(
               '欢迎使用鸿蒙 Flutter 应用',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 48),
             ElevatedButton.icon(
@@ -86,10 +79,7 @@ class MainPage extends StatelessWidget {
             const SizedBox(height: 16),
             const Text(
               '点击上方按钮体验鸿蒙原生功能',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
           ],
         ),
