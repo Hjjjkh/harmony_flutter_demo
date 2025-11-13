@@ -9,7 +9,16 @@
     "products": [
       {
         "name": "default",
-        "signingConfig": "defaultDebug"
+        "signingConfig": "defaultDebug",
+        "targets": [
+          "default"
+        ],
+        "compileSdkVersion": {
+          "apiVersion": 11
+        },
+        "compatibleSdkVersion": {
+          "apiVersion": 10
+        }
       }
     ]
   },
