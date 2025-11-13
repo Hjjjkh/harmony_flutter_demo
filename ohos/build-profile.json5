@@ -1,10 +1,30 @@
 {
+  "app": {
+    "bundleName": "com.hjjjkh.harmonyflutterdemo",
+    "vendor": "Hjjjkh",
+    "version": {
+      "code": 1000000,
+      "name": "1.0.0"
+    },
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "defaultDebug"
+      }
+    ]
+  },
   "apiType": "stageMode",
   "buildOption": {
     "arkOptions": {
       "runtimeOnly": false
     }
   },
+  "signingConfigs": [
+    {
+      "name": "defaultDebug",
+      "type": "debug"
+    }
+  ],
   "modules": [
     {
       "name": "entry",
