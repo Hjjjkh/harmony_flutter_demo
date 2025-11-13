@@ -14,10 +14,11 @@ export interface HighlightInfo {
   text: string;
   color: string;
   note?: string; // 备注
+  createTime?: number;
 }
 
 /**
- * 高亮管理类
+ * 高亮管理器
  * 负责保存和管理文本高亮标注
  */
 export class HighlightManager {
@@ -25,16 +26,14 @@ export class HighlightManager {
   private preferencesStore: preferences.Preferences | null = null;
   private readonly PREF_NAME = 'highlights';
   private highlights: Map<string, HighlightInfo[]> = new Map(); // key: textHash, value: highlights
+  private initializing: Promise<void> | null = null;
 
   constructor(context: common.Context) {
     this.context = context;
-    this.initPreferences();
+    this.initializing = this.setup();
   }
 
-  /**
-   * 初始化Preferences
-   */
-  private async initPreferences() {
+  private async setup() {
     try {
       this.preferencesStore = await preferences.getPreferences(this.context, this.PREF_NAME);
       await this.loadHighlights();
@@ -45,11 +44,26 @@ export class HighlightManager {
   }
 
   /**
+   * 初始化Preferences
+   */
+  private async initPreferences() {
+    if (this.preferencesStore) {
+      return;
+    }
+
+    if (!this.initializing) {
+      this.initializing = this.setup();
+    }
+
+    await this.initializing;
+  }
+
+  /**
    * 生成文本哈希值
    */
   private generateTextHash(text: string): string {
     let hash = 0;
-    for (let i = 0; i < Math.min(text.length, 100); i++) {
+    for (let i = 0; i < Math.min(text.length, 1000); i++) {
       const char = text.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
       hash = hash & hash;
@@ -103,13 +117,14 @@ export class HighlightManager {
 
     const textHash = this.generateTextHash(text);
     const highlightText = text.substring(startIndex, endIndex);
-    
+
     const highlight: HighlightInfo = {
       startIndex,
       endIndex,
       text: highlightText,
       color,
-      note
+      note,
+      createTime: Date.now()
     };
 
     if (!this.highlights.has(textHash)) {
@@ -125,13 +140,27 @@ export class HighlightManager {
   }
 
   /**
-   * 获取文本的所有高亮
+   * 获取文本的所有高亮（异步）
    * @param text 文本内容
-   * @returns 高亮数组
    */
-  getHighlights(text: string): HighlightInfo[] {
+  async getHighlights(text: string): Promise<HighlightInfo[]> {
+    if (!this.preferencesStore) {
+      await this.initPreferences();
+    }
+
     const textHash = this.generateTextHash(text);
-    return this.highlights.get(textHash) || [];
+    const list = this.highlights.get(textHash) || [];
+    // 返回副本防止外部修改内部状态
+    return list.map(item => ({ ...item }));
+  }
+
+  /**
+   * 获取文本的所有高亮（同步缓存）
+   */
+  getHighlightsSync(text: string): HighlightInfo[] {
+    const textHash = this.generateTextHash(text);
+    const list = this.highlights.get(textHash) || [];
+    return list.map(item => ({ ...item }));
   }
 
   /**
@@ -142,7 +171,7 @@ export class HighlightManager {
    */
   async removeHighlight(text: string, startIndex: number, endIndex: number): Promise<void> {
     if (!this.preferencesStore) {
-      return;
+      await this.initPreferences();
     }
 
     const textHash = this.generateTextHash(text);
@@ -151,7 +180,7 @@ export class HighlightManager {
       return;
     }
 
-    const filtered = highlights.filter(h => 
+    const filtered = highlights.filter(h =>
       !(h.startIndex === startIndex && h.endIndex === endIndex)
     );
 
@@ -161,9 +190,30 @@ export class HighlightManager {
   }
 
   /**
+   * 清空文本的所有高亮
+   */
+  async clearHighlights(text: string): Promise<void> {
+    if (!this.preferencesStore) {
+      await this.initPreferences();
+    }
+
+    const textHash = this.generateTextHash(text);
+    this.highlights.delete(textHash);
+    if (this.preferencesStore) {
+      const key = `highlight_${textHash}`;
+      await this.preferencesStore.delete(key);
+      await this.preferencesStore.flush();
+    }
+  }
+
+  /**
    * 保存高亮数据
    */
   private async saveHighlights(textHash: string, highlights: HighlightInfo[]) {
+    if (!this.preferencesStore) {
+      await this.initPreferences();
+    }
+
     if (!this.preferencesStore) {
       return;
     }

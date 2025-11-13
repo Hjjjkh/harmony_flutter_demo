@@ -26,16 +26,17 @@ export class WordBook {
   private readonly PREF_NAME = 'wordbook';
   private readonly KEY_WORDS = 'words';
   private words: Map<string, WordInfo> = new Map();
+  private initializing: Promise<void> | null = null;
 
   constructor(context: common.Context) {
     this.context = context;
-    this.initPreferences();
+    this.initializing = this.setup();
   }
 
   /**
    * 初始化Preferences
    */
-  private async initPreferences() {
+  private async setup() {
     try {
       this.preferencesStore = await preferences.getPreferences(this.context, this.PREF_NAME);
       await this.loadWords();
@@ -43,6 +44,25 @@ export class WordBook {
     } catch (err) {
       hilog.error(0x0000, TAG, `Failed to init preferences: ${(err as BusinessError).message}`);
     }
+  }
+
+  private async initPreferences() {
+    if (this.preferencesStore) {
+      return;
+    }
+
+    if (!this.initializing) {
+      this.initializing = this.setup();
+    }
+
+    await this.initializing;
+  }
+
+  /**
+   * 等待初始化完成
+   */
+  async ready() {
+    await this.initPreferences();
   }
 
   /**
@@ -56,7 +76,8 @@ export class WordBook {
     try {
       const wordsJson = await this.preferencesStore.get(this.KEY_WORDS, '{}');
       const wordsObj = JSON.parse(wordsJson as string) as Record<string, WordInfo>;
-      
+
+      this.words.clear();
       for (const word in wordsObj) {
         this.words.set(word, wordsObj[word]);
       }
@@ -82,18 +103,23 @@ export class WordBook {
       return;
     }
 
+    const normalized = word.trim();
+    if (normalized.length === 0) {
+      return;
+    }
+
     const wordInfo: WordInfo = {
-      word,
+      word: normalized,
       definition,
       example,
       addTime: Date.now(),
       reviewCount: 0
     };
 
-    this.words.set(word, wordInfo);
+    this.words.set(normalized, wordInfo);
     await this.saveWords();
 
-    hilog.info(0x0000, TAG, `Word added: ${word}`);
+    hilog.info(0x0000, TAG, `Word added: ${normalized}`);
   }
 
   /**
@@ -101,6 +127,10 @@ export class WordBook {
    * @param word 单词
    */
   async removeWord(word: string): Promise<void> {
+    if (!this.preferencesStore) {
+      await this.initPreferences();
+    }
+
     if (!this.preferencesStore) {
       return;
     }
@@ -112,11 +142,22 @@ export class WordBook {
   }
 
   /**
-   * 获取所有生词
+   * 获取所有生词（按添加时间倒序）
    * @returns 生词数组
    */
   getAllWords(): WordInfo[] {
-    return Array.from(this.words.values());
+    return Array.from(this.words.values())
+      .sort((a, b) => b.addTime - a.addTime)
+      .map(item => ({ ...item }));
+  }
+
+  /**
+   * 根据复习次数排序
+   */
+  getWordsByReview(): WordInfo[] {
+    return Array.from(this.words.values())
+      .sort((a, b) => (b.reviewCount - a.reviewCount) || (b.addTime - a.addTime))
+      .map(item => ({ ...item }));
   }
 
   /**
@@ -125,7 +166,7 @@ export class WordBook {
    * @returns 是否在生词本中
    */
   hasWord(word: string): boolean {
-    return this.words.has(word);
+    return this.words.has(word.trim());
   }
 
   /**
@@ -134,14 +175,19 @@ export class WordBook {
    */
   async updateReview(word: string): Promise<void> {
     if (!this.preferencesStore) {
+      await this.initPreferences();
+    }
+
+    if (!this.preferencesStore) {
       return;
     }
 
-    const wordInfo = this.words.get(word);
+    const normalized = word.trim();
+    const wordInfo = this.words.get(normalized);
     if (wordInfo) {
       wordInfo.reviewCount++;
       wordInfo.lastReviewTime = Date.now();
-      this.words.set(word, wordInfo);
+      this.words.set(normalized, wordInfo);
       await this.saveWords();
     }
   }
@@ -150,6 +196,10 @@ export class WordBook {
    * 保存生词数据
    */
   private async saveWords() {
+    if (!this.preferencesStore) {
+      await this.initPreferences();
+    }
+
     if (!this.preferencesStore) {
       return;
     }
@@ -174,9 +224,10 @@ export class WordBook {
    * @returns 释义
    */
   async queryDictionary(word: string): Promise<string> {
-    // 这里应该调用实际的词典API
-    // 目前返回示例数据
-    const wordInfo = this.words.get(word);
+    await this.ready();
+
+    const normalized = word.trim();
+    const wordInfo = this.words.get(normalized);
     if (wordInfo && wordInfo.definition) {
       return wordInfo.definition;
     }
@@ -190,7 +241,18 @@ export class WordBook {
       'text': '文本；文字'
     };
 
-    return dictionary[word.toLowerCase()] || '未找到释义';
+    return dictionary[normalized.toLowerCase()] || '未找到释义';
+  }
+
+  /**
+   * 导出为文本（简单 JSON 字符串）
+   */
+  exportAsJson(): string {
+    const wordsObj: Record<string, WordInfo> = {};
+    for (const [word, info] of this.words.entries()) {
+      wordsObj[word] = info;
+    }
+    return JSON.stringify(wordsObj, null, 2);
   }
 }
 

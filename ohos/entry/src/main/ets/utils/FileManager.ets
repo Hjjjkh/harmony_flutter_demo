@@ -18,7 +18,7 @@ export interface FileImportResult {
  * 负责文件读取、导入等功能
  */
 export class FileManager {
-  private readonly SUPPORTED_SUFFIXES: string[] = ['.txt', '.md', '.rtf', '.html', '.htm', '.json', '.csv', '.docx', '.pdf'];
+  private readonly SUPPORTED_SUFFIXES: string[] = ['.txt', '.md', '.rtf', '.html', '.htm', '.json', '.csv', '.docx', '.pdf', '.epub'];
   private context: common.Context;
 
   constructor(context: common.Context) {
@@ -128,6 +128,8 @@ export class FileManager {
         return this.extractDocxText(buffer);
       case '.pdf':
         return this.extractPdfText(buffer);
+      case '.epub':
+        return this.extractEpubText(buffer);
       default:
         hilog.warn(0x0000, TAG, `Unsupported extension ${extension}, fallback to plain text`);
         return this.decodeBuffer(buffer);
@@ -209,6 +211,20 @@ export class FileManager {
       hilog.warn(0x0000, TAG, 'PDF parsing produced empty text');
     }
     return text;
+  }
+
+  private extractEpubText(buffer: ArrayBuffer): string {
+    const header = new Uint8Array(buffer.slice(0, 4));
+    const isZip = header.length >= 4 && header[0] === 0x50 && header[1] === 0x4B && header[2] === 0x03 && header[3] === 0x04;
+    if (isZip) {
+      hilog.warn(0x0000, TAG, 'EPUB parsing not supported, returning guidance text');
+      promptAction.showToast({
+        message: 'EPUB 暂未支持，已返回转换提示',
+        duration: 2500
+      });
+      return '【提示】当前版本暂未支持直接解析 EPUB，请将电子书转换为 TXT / Markdown 后再导入。';
+    }
+    return this.decodeBuffer(buffer);
   }
 
   private getExtensionFromUri(uri: string): string {

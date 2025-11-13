@@ -6,8 +6,8 @@ import common from '@ohos.app.ability.common';
 import { TextProcessor } from '../utils/TextProcessor';
 import { FileManager } from '../utils/FileManager';
 import { ReadingProgress } from '../utils/ReadingProgress';
-import { HighlightManager } from '../utils/HighlightManager';
-import { WordBook } from '../utils/WordBook';
+import { HighlightManager, HighlightInfo } from '../utils/HighlightManager';
+import { WordBook, WordInfo } from '../utils/WordBook';
 
 const TAG = 'SpeedReadingPageEnhanced';
 
@@ -72,6 +72,14 @@ struct SpeedReadingPageEnhanced {
   @State selectedText: string = '';
   @State highlightStartIndex: number = -1;
   @State highlightEndIndex: number = -1;
+  @State highlightList: HighlightInfo[] = [];
+  
+  // 生词本
+  @State wordList: WordInfo[] = [];
+  
+  // 当前片段信息
+  @State currentSegmentStart: number = 0;
+  @State currentSegmentEnd: number = 0;
   
   // 工具类实例
   private fileManager: FileManager | null = null;
@@ -101,12 +109,14 @@ struct SpeedReadingPageEnhanced {
     { label: '等宽字体', value: 'monospace' }
   ];
 
-  aboutToAppear() {
+  async aboutToAppear() {
     hilog.info(0x0000, TAG, 'SpeedReadingPageEnhanced aboutToAppear');
     this.initContext();
-    this.initTools();
-    this.loadProgress();
+    await this.initTools();
+    await this.loadProgress();
     this.processText();
+    await this.refreshHighlights();
+    await this.refreshWordBook();
   }
 
   aboutToDisappear() {
@@ -143,6 +153,9 @@ struct SpeedReadingPageEnhanced {
     this.progressManager = new ReadingProgress(this.context);
     this.highlightManager = new HighlightManager(this.context);
     this.wordBook = new WordBook(this.context);
+
+    await this.highlightManager?.getHighlights(this.fullText);
+    await this.wordBook?.ready();
   }
 
   /**
@@ -243,6 +256,8 @@ struct SpeedReadingPageEnhanced {
     this.currentWordIndex = 0;
     this.currentSentenceIndex = 0;
     this.currentText = '';
+    this.currentSegmentStart = 0;
+    this.currentSegmentEnd = 0;
   }
 
   /**
@@ -260,7 +275,9 @@ struct SpeedReadingPageEnhanced {
       case ReadingMode.CHAR:
         if (this.currentIndex < this.fullText.length) {
           nextText = this.fullText.charAt(this.currentIndex);
+          this.currentSegmentStart = this.currentIndex;
           this.currentIndex++;
+          this.currentSegmentEnd = this.currentIndex;
           delay = Math.floor(this.baseTimePerChar / this.speed);
         } else {
           this.isPlaying = false;
@@ -271,8 +288,11 @@ struct SpeedReadingPageEnhanced {
       case ReadingMode.WORD:
         if (this.currentWordIndex < this.words.length) {
           nextText = this.words[this.currentWordIndex];
+          const start = this.currentIndex;
           this.currentWordIndex++;
           this.currentIndex += nextText.length;
+          this.currentSegmentStart = start;
+          this.currentSegmentEnd = this.currentIndex;
           delay = Math.floor(this.baseTimePerWord / this.speed);
         } else {
           this.isPlaying = false;
@@ -283,8 +303,11 @@ struct SpeedReadingPageEnhanced {
       case ReadingMode.SENTENCE:
         if (this.currentSentenceIndex < this.sentences.length) {
           nextText = this.sentences[this.currentSentenceIndex];
+          const start = this.currentIndex;
           this.currentSentenceIndex++;
           this.currentIndex += nextText.length;
+          this.currentSegmentStart = start;
+          this.currentSegmentEnd = this.currentIndex;
           delay = Math.floor(this.baseTimePerSentence / this.speed);
         } else {
           this.isPlaying = false;
@@ -292,6 +315,9 @@ struct SpeedReadingPageEnhanced {
         }
         break;
     }
+
+    this.highlightStartIndex = this.currentSegmentStart;
+    this.highlightEndIndex = this.currentSegmentEnd;
 
     this.currentText = nextText;
 
@@ -324,6 +350,8 @@ struct SpeedReadingPageEnhanced {
       this.currentFileExtension = result.extension;
       this.processText();
       this.resetReading();
+      await this.refreshHighlights();
+      await this.refreshWordBook();
       promptAction.showToast({ message: `已导入 ${result.fileName}`, duration: 2000 });
     } catch (err) {
       hilog.error(0x0000, TAG, `Failed to import file: ${(err as BusinessError).message}`);
@@ -335,7 +363,8 @@ struct SpeedReadingPageEnhanced {
    * 添加高亮
    */
   async addHighlight() {
-    if (!this.highlightManager || this.highlightStartIndex < 0 || this.highlightEndIndex < 0) {
+    if (!this.highlightManager || this.highlightStartIndex < 0 || this.highlightEndIndex <= this.highlightStartIndex) {
+      promptAction.showToast({ message: '当前没有可高亮的内容', duration: 1500 });
       return;
     }
 
@@ -346,8 +375,7 @@ struct SpeedReadingPageEnhanced {
       '#FFD700' // 金色高亮
     );
 
-    this.highlightStartIndex = -1;
-    this.highlightEndIndex = -1;
+    await this.refreshHighlights();
     this.selectedText = '';
     promptAction.showToast({ message: '已添加高亮', duration: 2000 });
   }
@@ -360,9 +388,16 @@ struct SpeedReadingPageEnhanced {
       return;
     }
 
-    const definition = await this.wordBook.queryDictionary(word);
-    await this.wordBook.addWord(word, definition);
-    promptAction.showToast({ message: `已添加生词: ${word}`, duration: 2000 });
+    const cleaned = word.trim();
+    if (cleaned.length === 0) {
+      promptAction.showToast({ message: '没有可添加的内容', duration: 1500 });
+      return;
+    }
+
+    const definition = await this.wordBook.queryDictionary(cleaned);
+    await this.wordBook.addWord(cleaned, definition);
+    await this.refreshWordBook();
+    promptAction.showToast({ message: `已添加生词: ${cleaned}`, duration: 2000 });
   }
 
   /**
@@ -443,6 +478,83 @@ struct SpeedReadingPageEnhanced {
       default:
         return '未知';
     }
+  }
+
+  /**
+   * 刷新高亮数据
+   */
+  async refreshHighlights() {
+    if (!this.highlightManager) {
+      return;
+    }
+    const list = await this.highlightManager.getHighlights(this.fullText);
+    this.highlightList = list.sort((a, b) => (a.startIndex - b.startIndex));
+  }
+
+  /**
+   * 刷新生词本数据
+   */
+  async refreshWordBook() {
+    if (!this.wordBook) {
+      return;
+    }
+    this.wordList = this.wordBook.getAllWords();
+  }
+
+  /**
+   * 移除单个高亮
+   */
+  async removeHighlightEntry(item: HighlightInfo) {
+    if (!this.highlightManager) {
+      return;
+    }
+    await this.highlightManager.removeHighlight(this.fullText, item.startIndex, item.endIndex);
+    await this.refreshHighlights();
+    promptAction.showToast({ message: '已移除高亮', duration: 1500 });
+  }
+
+  async clearAllHighlights() {
+    if (!this.highlightManager) {
+      return;
+    }
+    await this.highlightManager.clearHighlights(this.fullText);
+    await this.refreshHighlights();
+    promptAction.showToast({ message: '已清空高亮', duration: 1500 });
+  }
+
+  async reviewWord(word: string) {
+    if (!this.wordBook) {
+      return;
+    }
+    await this.wordBook.updateReview(word);
+    await this.refreshWordBook();
+    promptAction.showToast({ message: `已复习 ${word}`, duration: 1500 });
+  }
+
+  async removeWord(word: string) {
+    if (!this.wordBook) {
+      return;
+    }
+    await this.wordBook.removeWord(word);
+    await this.refreshWordBook();
+    promptAction.showToast({ message: `已删除生词 ${word}`, duration: 1500 });
+  }
+
+  closeAllOverlays() {
+    this.showSettings = false;
+    this.showTextInput = false;
+    this.showWordBook = false;
+    this.showHighlights = false;
+    this.inputText = '';
+  }
+
+  formatTimestamp(time?: number): string {
+    if (!time) {
+      return '未复习';
+    }
+    const date = new Date(time);
+    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ` +
+      `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
   }
 
   /**
@@ -619,7 +731,7 @@ struct SpeedReadingPageEnhanced {
             .fontSize(16)
             .backgroundColor(colors.accent ?? '#007DFF')
             .fontColor('#FFFFFF')
-            .onClick(() => {
+            .onClick(async () => {
               if (this.inputText.trim().length === 0) {
                 promptAction.showToast({ message: '请输入有效文本', duration: 1500 });
                 return;
@@ -629,6 +741,7 @@ struct SpeedReadingPageEnhanced {
               this.currentFileExtension = '.txt';
               this.processText();
               this.resetReading();
+              await this.refreshHighlights();
               this.showTextInput = false;
               this.inputText = '';
               promptAction.showToast({ message: '文本已更新', duration: 2000 });
@@ -654,6 +767,201 @@ struct SpeedReadingPageEnhanced {
   }
 
   /**
+   * 渲染高亮面板
+   */
+  renderHighlightsPanel(colors: { bg: string; text: string; card: string; accent: string | undefined }) {
+    Column() {
+      Column() {
+        Row() {
+          Text('高亮列表')
+            .fontSize(20)
+            .fontWeight(FontWeight.Bold)
+            .fontColor(colors.text)
+          Blank()
+          if (this.highlightList.length > 0) {
+            Button('清空')
+              .type(ButtonType.Capsule)
+              .fontSize(12)
+              .backgroundColor(colors.accent ?? '#007DFF')
+              .fontColor('#FFFFFF')
+              .onClick(async () => {
+                await this.clearAllHighlights();
+              });
+          }
+        }
+        .width('100%')
+        .margin({ bottom: 16 })
+
+        if (this.highlightList.length === 0) {
+          Text('暂无高亮内容')
+            .fontSize(14)
+            .fontColor('#8E8E93')
+            .textAlign(TextAlign.Center)
+            .width('100%')
+            .margin({ top: 16, bottom: 16 });
+        } else {
+          Scroll() {
+            Column() {
+              ForEach(this.highlightList, (item: HighlightInfo, index: number) => {
+                Column() {
+                  Text(item.text || this.fullText.substring(item.startIndex, Math.min(item.endIndex, item.startIndex + 80)))
+                    .fontSize(16)
+                    .fontColor(colors.text)
+                    .lineHeight(22)
+                    .margin({ bottom: 8 })
+                  Text(`范围: ${item.startIndex}-${item.endIndex}`)
+                    .fontSize(12)
+                    .fontColor('#8E8E93')
+                  Text(`创建时间: ${this.formatTimestamp(item.createTime)}`)
+                    .fontSize(12)
+                    .fontColor('#8E8E93')
+                    .margin({ bottom: 8 })
+                  Row() {
+                    Button('移除')
+                      .type(ButtonType.Capsule)
+                      .fontSize(14)
+                      .backgroundColor('#FEE2E2')
+                      .fontColor('#B91C1C')
+                      .onClick(async () => {
+                        await this.removeHighlightEntry(item);
+                      })
+                      .width(100)
+                      .height(36)
+                  }
+                  .width('100%')
+                  .justifyContent(FlexAlign.End)
+                }
+                .width('100%')
+                .padding({ top: 12, bottom: 12 })
+                .borderRadius(12)
+                .backgroundColor('#0D000000')
+                .margin({ bottom: 12 })
+              }, (item: HighlightInfo) => `${item.startIndex}-${item.endIndex}-${item.createTime ?? 0}`)
+            }
+          }
+          .width('100%')
+          .height(320)
+        }
+      }
+      .width('90%')
+      .backgroundColor(colors.card)
+      .borderRadius(16)
+      .padding({ left: 20, right: 20, top: 24, bottom: 24 })
+      .shadow({ radius: 24, color: '#33000000', offsetX: 0, offsetY: 6 })
+    }
+    .width('100%')
+    .height('100%')
+    .justifyContent(FlexAlign.Center)
+    .alignItems(HorizontalAlign.Center)
+  }
+
+  /**
+   * 渲染生词本面板
+   */
+  renderWordBookPanel(colors: { bg: string; text: string; card: string; accent: string | undefined }) {
+    Column() {
+      Column() {
+        Row() {
+          Text('生词本')
+            .fontSize(20)
+            .fontWeight(FontWeight.Bold)
+            .fontColor(colors.text)
+          Blank()
+          if (this.wordList.length > 0) {
+            Text(`共 ${this.wordList.length} 个生词`)
+              .fontSize(12)
+              .fontColor('#8E8E93');
+          }
+        }
+        .width('100%')
+        .margin({ bottom: 16 })
+
+        if (this.wordList.length === 0) {
+          Text('暂无生词，可长按阅读内容添加')
+            .fontSize(14)
+            .fontColor('#8E8E93')
+            .textAlign(TextAlign.Center)
+            .width('100%')
+            .margin({ top: 16, bottom: 16 });
+        } else {
+          Scroll() {
+            Column() {
+              ForEach(this.wordList, (item: WordInfo, index: number) => {
+                Column() {
+                  Text(item.word)
+                    .fontSize(18)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor(colors.text)
+                    .margin({ bottom: 4 })
+                  if (item.definition) {
+                    Text(item.definition)
+                      .fontSize(14)
+                      .fontColor('#4B5563')
+                      .lineHeight(20)
+                      .margin({ bottom: 4 });
+                  }
+                  if (item.example) {
+                    Text(`例句：${item.example}`)
+                      .fontSize(12)
+                      .fontColor('#6B7280')
+                      .lineHeight(18)
+                      .margin({ bottom: 4 });
+                  }
+                  Text(`复习 ${item.reviewCount} 次 · ${this.formatTimestamp(item.lastReviewTime)}`)
+                    .fontSize(12)
+                    .fontColor('#8E8E93')
+                    .margin({ bottom: 8 })
+                  Row() {
+                    Button('复习 +1')
+                      .type(ButtonType.Capsule)
+                      .fontSize(14)
+                      .backgroundColor(colors.accent ?? '#007DFF')
+                      .fontColor('#FFFFFF')
+                      .onClick(async () => {
+                        await this.reviewWord(item.word);
+                      })
+                      .width(110)
+                      .height(36)
+                    Button('删除')
+                      .type(ButtonType.Capsule)
+                      .fontSize(14)
+                      .backgroundColor('#FEE2E2')
+                      .fontColor('#B91C1C')
+                      .onClick(async () => {
+                        await this.removeWord(item.word);
+                      })
+                      .width(90)
+                      .height(36)
+                      .margin({ left: 12 })
+                  }
+                  .width('100%')
+                  .justifyContent(FlexAlign.End)
+                }
+                .width('100%')
+                .padding({ top: 12, bottom: 12 })
+                .borderRadius(12)
+                .backgroundColor('#0D000000')
+                .margin({ bottom: 12 })
+              }, (item: WordInfo) => `${item.word}-${item.addTime}`)
+            }
+          }
+          .width('100%')
+          .height(360)
+        }
+      }
+      .width('90%')
+      .backgroundColor(colors.card)
+      .borderRadius(16)
+      .padding({ left: 20, right: 20, top: 24, bottom: 24 })
+      .shadow({ radius: 24, color: '#33000000', offsetX: 0, offsetY: 6 })
+    }
+    .width('100%')
+    .height('100%')
+    .justifyContent(FlexAlign.Center)
+    .alignItems(HorizontalAlign.Center)
+  }
+
+  /**
    * 字体大小选项
    */
   private readonly fontSizeOptions: { label: string; value: number }[] = [
@@ -664,6 +972,10 @@ struct SpeedReadingPageEnhanced {
 
   build() {
     const colors = this.getThemeColors();
+    const activeHighlight = this.highlightList.find(item =>
+      this.currentSegmentStart >= item.startIndex &&
+      this.currentSegmentEnd <= item.endIndex
+    );
 
     Stack() {
       Column() {
@@ -684,6 +996,7 @@ struct SpeedReadingPageEnhanced {
           .type(ButtonType.Circle)
           .backgroundColor('#00000000')
           .onClick(() => {
+            this.closeAllOverlays();
             this.showSettings = true;
           })
         }
@@ -701,6 +1014,10 @@ struct SpeedReadingPageEnhanced {
           Text(`模式：${this.getModeLabel(this.readingMode)} · 速度：${this.formatSpeed(this.speed)} · 格式：${this.currentFileExtension}`)
             .fontSize(12)
             .fontColor('#8E8E93')
+          Text(`高亮 ${this.highlightList.length} · 生词 ${this.wordList.length}`)
+            .fontSize(12)
+            .fontColor('#8E8E93')
+            .margin({ top: 4 })
         }
         .width('100%')
         .padding({ left: 16, right: 16 })
@@ -715,9 +1032,14 @@ struct SpeedReadingPageEnhanced {
               .fontFamily(this.fontFamily)
               .textAlign(TextAlign.Center)
               .width('100%')
+              .backgroundColor(activeHighlight ? `${activeHighlight.color}33` : '#00000000')
+              .borderRadius(12)
+              .padding({ top: 8, bottom: 8 })
               .onLongPress(() => {
                 if (this.currentText.trim().length > 0) {
                   this.selectedText = this.currentText;
+                  this.highlightStartIndex = this.currentSegmentStart;
+                  this.highlightEndIndex = this.currentSegmentEnd;
                   promptAction.showDialog({
                     title: '操作',
                     message: `选择文本: ${this.selectedText}`,
@@ -838,10 +1160,63 @@ struct SpeedReadingPageEnhanced {
               .backgroundColor('#F1F3F5')
               .fontColor('#182431')
               .onClick(() => {
+                this.closeAllOverlays();
                 this.showTextInput = true;
               })
               .width(120)
               .height(44)
+              .margin({ left: 8 })
+          }
+          .width('100%')
+          .justifyContent(FlexAlign.Center)
+          .margin({ bottom: 12 })
+
+          Row() {
+            Button('高亮列表')
+              .type(ButtonType.Capsule)
+              .fontSize(14)
+              .backgroundColor('#F1F3F5')
+              .fontColor('#182431')
+              .onClick(async () => {
+                await this.refreshHighlights();
+                this.closeAllOverlays();
+                this.showHighlights = true;
+              })
+              .width(120)
+              .height(40)
+
+            Button('生词本')
+              .type(ButtonType.Capsule)
+              .fontSize(14)
+              .backgroundColor('#F1F3F5')
+              .fontColor('#182431')
+              .onClick(async () => {
+                await this.refreshWordBook();
+                this.closeAllOverlays();
+                this.showWordBook = true;
+              })
+              .width(120)
+              .height(40)
+              .margin({ left: 8 })
+
+            Button('导出生词')
+              .type(ButtonType.Capsule)
+              .fontSize(14)
+              .backgroundColor('#F1F3F5')
+              .fontColor('#182431')
+              .onClick(() => {
+                if (!this.wordBook) {
+                  return;
+                }
+                const exportText = this.wordBook.exportAsJson();
+                promptAction.showDialog({
+                  title: '导出生词本',
+                  message: exportText,
+                  buttons: [{ text: '关闭', color: colors.accent ?? '#007DFF' }]
+                });
+              })
+              .width(120)
+              .height(40)
               .margin({ left: 8 })
           }
           .width('100%')
@@ -856,19 +1231,13 @@ struct SpeedReadingPageEnhanced {
       .backgroundColor(colors.bg)
       .justifyContent(FlexAlign.Start)
 
-      if (this.showSettings || this.showTextInput) {
+      if (this.showSettings || this.showTextInput || this.showHighlights || this.showWordBook) {
         Column()
           .width('100%')
           .height('100%')
           .backgroundColor('#66000000')
           .onClick(() => {
-            if (this.showSettings) {
-              this.showSettings = false;
-            }
-            if (this.showTextInput) {
-              this.showTextInput = false;
-              this.inputText = '';
-            }
+            this.closeAllOverlays();
           });
       }
 
@@ -878,6 +1247,14 @@ struct SpeedReadingPageEnhanced {
 
       if (this.showTextInput) {
         this.renderTextInputDialog(colors);
+      }
+
+      if (this.showHighlights) {
+        this.renderHighlightsPanel(colors);
+      }
+
+      if (this.showWordBook) {
+        this.renderWordBookPanel(colors);
       }
     }
     .width('100%')
