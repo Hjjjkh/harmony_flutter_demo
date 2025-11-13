@@ -80,6 +80,8 @@ struct SpeedReadingPageEnhanced {
   // 当前片段信息
   @State currentSegmentStart: number = 0;
   @State currentSegmentEnd: number = 0;
+  @State showHighlightPicker: boolean = false;
+  @State selectedHighlightColor: string = '#FFD700';
   
   // 工具类实例
   private fileManager: FileManager | null = null;
@@ -107,6 +109,14 @@ struct SpeedReadingPageEnhanced {
     { label: '默认无衬线', value: 'sans-serif' },
     { label: '正式衬线', value: 'serif' },
     { label: '等宽字体', value: 'monospace' }
+  ];
+  private readonly highlightColors: { name: string; color: string }[] = [
+    { name: '经典金色', color: '#FFD700' },
+    { name: '琥珀橙', color: '#FFB347' },
+    { name: '清新绿', color: '#6FCF97' },
+    { name: '天空蓝', color: '#64B5F6' },
+    { name: '薰衣草', color: '#B388FF' },
+    { name: '樱花粉', color: '#F48FB1' }
   ];
 
   async aboutToAppear() {
@@ -362,21 +372,26 @@ struct SpeedReadingPageEnhanced {
   /**
    * 添加高亮
    */
-  async addHighlight() {
+  async addHighlight(color?: string) {
     if (!this.highlightManager || this.highlightStartIndex < 0 || this.highlightEndIndex <= this.highlightStartIndex) {
       promptAction.showToast({ message: '当前没有可高亮的内容', duration: 1500 });
       return;
     }
 
+    const highlightColor = color ?? this.selectedHighlightColor ?? '#FFD700';
+
     await this.highlightManager.addHighlight(
       this.fullText,
       this.highlightStartIndex,
       this.highlightEndIndex,
-      '#FFD700' // 金色高亮
+      highlightColor
     );
 
     await this.refreshHighlights();
     this.selectedText = '';
+    this.highlightStartIndex = -1;
+    this.highlightEndIndex = -1;
+    this.closeAllOverlays();
     promptAction.showToast({ message: '已添加高亮', duration: 2000 });
   }
 
@@ -501,6 +516,46 @@ struct SpeedReadingPageEnhanced {
     this.wordList = this.wordBook.getAllWords();
   }
 
+  findWordIndex(position: number): number {
+    let cursor = 0;
+    for (let i = 0; i < this.words.length; i++) {
+      const word = this.words[i];
+      if (cursor >= position) {
+        return i;
+      }
+      cursor += word.length;
+    }
+    return this.words.length;
+  }
+
+  findSentenceIndex(position: number): number {
+    let cursor = 0;
+    for (let i = 0; i < this.sentences.length; i++) {
+      const segment = this.sentences[i];
+      if (cursor >= position) {
+        return i;
+      }
+      cursor += segment.length;
+    }
+    return this.sentences.length;
+  }
+
+  async jumpToHighlight(item: HighlightInfo) {
+    this.stopReading();
+    const start = item.startIndex;
+    const end = item.endIndex;
+
+    this.currentIndex = start;
+    this.currentWordIndex = this.findWordIndex(start);
+    this.currentSentenceIndex = this.findSentenceIndex(start);
+    this.currentSegmentStart = start;
+    this.currentSegmentEnd = end;
+    this.currentText = this.fullText.substring(start, Math.min(end, start + 200));
+    await this.saveProgress();
+    promptAction.showToast({ message: '已跳转到高亮位置', duration: 1500 });
+    this.closeAllOverlays();
+  }
+
   /**
    * 移除单个高亮
    */
@@ -540,11 +595,17 @@ struct SpeedReadingPageEnhanced {
     promptAction.showToast({ message: `已删除生词 ${word}`, duration: 1500 });
   }
 
+  getHighlightColorName(color: string): string {
+    const option = this.highlightColors.find(item => item.color === color);
+    return option ? option.name : color;
+  }
+
   closeAllOverlays() {
     this.showSettings = false;
     this.showTextInput = false;
     this.showWordBook = false;
     this.showHighlights = false;
+    this.showHighlightPicker = false;
     this.inputText = '';
   }
 
@@ -809,6 +870,19 @@ struct SpeedReadingPageEnhanced {
                     .fontColor(colors.text)
                     .lineHeight(22)
                     .margin({ bottom: 8 })
+                  Row() {
+                    Stack()
+                      .width(18)
+                      .height(18)
+                      .backgroundColor(item.color)
+                      .borderRadius(9)
+                      .margin({ right: 8 })
+                    Text(`颜色: ${this.getHighlightColorName(item.color)}`)
+                      .fontSize(12)
+                      .fontColor('#8E8E93')
+                  }
+                  .width('100%')
+                  .margin({ bottom: 4 })
                   Text(`范围: ${item.startIndex}-${item.endIndex}`)
                     .fontSize(12)
                     .fontColor('#8E8E93')
@@ -817,6 +891,16 @@ struct SpeedReadingPageEnhanced {
                     .fontColor('#8E8E93')
                     .margin({ bottom: 8 })
                   Row() {
+                    Button('跳转')
+                      .type(ButtonType.Capsule)
+                      .fontSize(14)
+                      .backgroundColor(colors.accent ?? '#007DFF')
+                      .fontColor('#FFFFFF')
+                      .onClick(async () => {
+                        await this.jumpToHighlight(item);
+                      })
+                      .width(100)
+                      .height(36)
                     Button('移除')
                       .type(ButtonType.Capsule)
                       .fontSize(14)
@@ -827,6 +911,7 @@ struct SpeedReadingPageEnhanced {
                       })
                       .width(100)
                       .height(36)
+                      .margin({ left: 12 })
                   }
                   .width('100%')
                   .justifyContent(FlexAlign.End)
@@ -961,6 +1046,85 @@ struct SpeedReadingPageEnhanced {
     .alignItems(HorizontalAlign.Center)
   }
 
+  renderHighlightPicker(colors: { bg: string; text: string; card: string; accent: string | undefined }) {
+    Column() {
+      Column() {
+        Text('选择高亮颜色')
+          .fontSize(20)
+          .fontWeight(FontWeight.Bold)
+          .fontColor(colors.text)
+          .textAlign(TextAlign.Center)
+          .margin({ bottom: 16 })
+
+        Text(this.selectedText.length > 0 ? `目标文本：${this.selectedText}` : '当前片段将被高亮')
+          .fontSize(14)
+          .fontColor('#8E8E93')
+          .lineHeight(20)
+          .margin({ bottom: 16 })
+
+        Column() {
+          ForEach(this.highlightColors, (option) => {
+            Row() {
+              Stack()
+                .width(32)
+                .height(32)
+                .backgroundColor(option.color)
+                .borderRadius(16)
+                .borderWidth(this.selectedHighlightColor === option.color ? 3 : 1)
+                .borderColor(this.selectedHighlightColor === option.color ? (colors.accent ?? '#007DFF') : '#D1D5DB')
+                .onClick(() => {
+                  this.selectedHighlightColor = option.color;
+                })
+              Text(option.name)
+                .fontSize(14)
+                .fontColor(colors.text)
+                .margin({ left: 12 })
+            }
+            .width('100%')
+            .padding({ top: 6, bottom: 6 })
+          })
+        }
+
+        Row() {
+          Button('取消')
+            .type(ButtonType.Capsule)
+            .fontSize(16)
+            .backgroundColor('#F1F3F5')
+            .fontColor('#182431')
+            .onClick(() => {
+              this.showHighlightPicker = false;
+            })
+            .width(120)
+            .height(44)
+
+          Button('确认高亮')
+            .type(ButtonType.Capsule)
+            .fontSize(16)
+            .backgroundColor(this.selectedHighlightColor)
+            .fontColor('#FFFFFF')
+            .onClick(async () => {
+              await this.addHighlight(this.selectedHighlightColor);
+            })
+            .width(140)
+            .height(44)
+            .margin({ left: 16 })
+        }
+        .width('100%')
+        .justifyContent(FlexAlign.Center)
+        .margin({ top: 24 })
+      }
+      .width('90%')
+      .backgroundColor(colors.card)
+      .borderRadius(16)
+      .padding({ left: 20, right: 20, top: 24, bottom: 24 })
+      .shadow({ radius: 24, color: '#33000000', offsetX: 0, offsetY: 6 })
+    }
+    .width('100%')
+    .height('100%')
+    .justifyContent(FlexAlign.Center)
+    .alignItems(HorizontalAlign.Center)
+  }
+
   /**
    * 字体大小选项
    */
@@ -1050,7 +1214,9 @@ struct SpeedReadingPageEnhanced {
                     ]
                   }).then((result: promptAction.ShowDialogSuccessResponse) => {
                     if (result.index === 0) {
-                      this.addHighlight();
+                      this.selectedHighlightColor = this.selectedHighlightColor || this.highlightColors[0].color;
+                      this.closeAllOverlays();
+                      this.showHighlightPicker = true;
                     } else if (result.index === 1) {
                       this.addToWordBook(this.selectedText);
                     }
@@ -1231,7 +1397,7 @@ struct SpeedReadingPageEnhanced {
       .backgroundColor(colors.bg)
       .justifyContent(FlexAlign.Start)
 
-      if (this.showSettings || this.showTextInput || this.showHighlights || this.showWordBook) {
+      if (this.showSettings || this.showTextInput || this.showHighlights || this.showWordBook || this.showHighlightPicker) {
         Column()
           .width('100%')
           .height('100%')
@@ -1255,6 +1421,10 @@ struct SpeedReadingPageEnhanced {
 
       if (this.showWordBook) {
         this.renderWordBookPanel(colors);
+      }
+
+      if (this.showHighlightPicker) {
+        this.renderHighlightPicker(colors);
       }
     }
     .width('100%')
