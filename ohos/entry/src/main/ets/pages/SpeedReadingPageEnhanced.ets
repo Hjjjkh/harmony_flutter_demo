@@ -137,7 +137,7 @@ struct SpeedReadingPageEnhanced {
 
   /**
    * 初始化Context
-   * 注意：在 HarmonyOS 中，Context 需要通过 Ability 传递
+   * 注意：在 OpenHarmony 中，Context 需要通过 Ability 传递
    * 这里使用简化方式，实际使用时需要从 Ability 传递 context
    */
   initContext() {

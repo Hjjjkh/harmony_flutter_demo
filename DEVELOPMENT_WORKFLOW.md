@@ -169,7 +169,7 @@ ohos/entry/src/main/ets/
 ├── entryability/            # 入口能力
 ├── pages/                   # 页面
 ├── utils/                   # 工具类
-│   └── HarmonyBridgePlugin.ets
+│   └── OpenHarmonyBridgePlugin.ets
 └── [新功能]/                # AI 会在这里添加新功能
 ```
 

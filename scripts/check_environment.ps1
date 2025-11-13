@@ -2,7 +2,7 @@
 # Check if development environment is configured correctly
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  HarmonyOS Flutter Development Environment Check" -ForegroundColor Cyan
+Write-Host "  OpenHarmony Flutter Development Environment Check" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 

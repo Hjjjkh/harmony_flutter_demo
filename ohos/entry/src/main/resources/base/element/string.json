@@ -2,15 +2,15 @@
   "string": [
     {
       "name": "module_desc",
-      "value": "Flutter HarmonyOS Demo Module"
+      "value": "Flutter OpenHarmony Demo Module"
     },
     {
       "name": "EntryAbility_desc",
-      "value": "Flutter HarmonyOS Demo Entry Ability"
+      "value": "Flutter OpenHarmony Demo Entry Ability"
     },
     {
       "name": "EntryAbility_label",
-      "value": "HarmonyFlutterDemo"
+      "value": "OpenHarmonyFlutterDemo"
     },
     {
       "name": "permission_internet_reason",

@@ -12,7 +12,7 @@
 脚本会自动检查：
 - ✅ Flutter SDK 配置
 - ✅ Node.js 配置
-- ✅ HarmonyOS SDK 配置
+- ✅ OpenHarmony SDK 配置
 - ✅ DevEco Studio 配置
 
 ### 手动检查
@@ -25,7 +25,7 @@ flutter doctor
 # 检查 Node.js
 node --version
 
-# 检查 HarmonyOS SDK
+# 检查 OpenHarmony SDK
 # 在 DevEco Studio 中查看 SDK 配置
 ```
 
@@ -46,10 +46,10 @@ node --version
 
 ### DevEco Studio
 - [ ] DevEco Studio 已安装
-- [ ] HarmonyOS SDK 已配置
+- [ ] OpenHarmony SDK 已配置
 - [ ] SDK 版本正确
 
-### HarmonyOS SDK
+### OpenHarmony SDK
 - [ ] SDK 路径正确
 - [ ] SDK 版本 >= 4.0
 - [ ] SDK 组件完整
@@ -60,7 +60,7 @@ node --version
 
 ### SDK 路径问题
 
-**问题**: 找不到 HarmonyOS SDK
+**问题**: 找不到 OpenHarmony SDK
 
 **解决**:
 1. 检查 SDK 路径：`C:\Users\<用户名>\AppData\Local\OpenHarmony\Sdk`

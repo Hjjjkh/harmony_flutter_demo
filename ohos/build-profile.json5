@@ -13,8 +13,8 @@
         "targets": [
           "default"
         ],
-        "compileSdkVersion": 11,
-        "compatibleSdkVersion": 10
+        "compileSdkVersion": 20,
+        "compatibleSdkVersion": 20
       }
     ]
   },
@@ -37,10 +37,9 @@
       "targets": [
         {
           "name": "default",
-          "runtimeOS": "HarmonyOS"
+          "runtimeOS": "OpenHarmony"
         }
       ]
     }
   ]
 }
-

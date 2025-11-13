@@ -1,4 +1,4 @@
-# HarmonyOS HAP 打包脚本（Gradle 方式）
+# OpenHarmony HAP 打包脚本（Gradle 方式）
 # 使用 Gradle 构建 HAP 安装包
 
 param(
@@ -17,7 +17,7 @@ $projectRoot = Join-Path $PSScriptRoot ".."
 $ohosPath = Join-Path $projectRoot "ohos"
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  HarmonyOS HAP 打包脚本 (Gradle)" -ForegroundColor Cyan
+Write-Host "  OpenHarmony HAP 打包脚本 (Gradle)" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -59,7 +59,7 @@ try {
     }
     
     # 构建 HAP
-    Write-Host "构建 HarmonyOS HAP..." -ForegroundColor Yellow
+    Write-Host "构建 OpenHarmony HAP..." -ForegroundColor Yellow
     $task = if ($Mode -eq "release") { "assembleHap" } else { "assembleHap" }
     
     if ($gradleCmd -like "*hvigor*") {

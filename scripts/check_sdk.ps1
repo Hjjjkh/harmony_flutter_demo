@@ -1,5 +1,5 @@
 # SDK Check Script
-# Check HarmonyOS SDK and Flutter SDK configuration
+# Check OpenHarmony SDK and Flutter SDK configuration
 
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "  SDK Configuration Check" -ForegroundColor Cyan
@@ -86,8 +86,8 @@ catch {
 
 Write-Host ""
 
-# Check HarmonyOS SDK (DevEco Studio)
-Write-Host "3. Checking HarmonyOS SDK (DevEco Studio)..." -ForegroundColor Yellow
+# Check OpenHarmony SDK (DevEco Studio)
+Write-Host "3. Checking OpenHarmony SDK (DevEco Studio)..." -ForegroundColor Yellow
 Write-Host ""
 
 $devecoPaths = @(
@@ -134,7 +134,7 @@ if ($devecoFound) {
     $sdkFound = $false
     foreach ($sdkPath in $sdkPaths) {
         if (Test-Path $sdkPath) {
-            Write-Host "  [OK] HarmonyOS SDK directory found" -ForegroundColor Green
+            Write-Host "  [OK] OpenHarmony SDK directory found" -ForegroundColor Green
             Write-Host "    SDK Path: $sdkPath" -ForegroundColor Gray
             
             # Check SDK contents
@@ -166,14 +166,14 @@ if ($devecoFound) {
     }
     
     if (-not $sdkFound) {
-        $warnings += "HarmonyOS SDK directory not found. You may need to configure it in DevEco Studio."
-        Write-Host "  [WARN] HarmonyOS SDK directory not found" -ForegroundColor Yellow
+        $warnings += "OpenHarmony SDK directory not found. You may need to configure it in DevEco Studio."
+        Write-Host "  [WARN] OpenHarmony SDK directory not found" -ForegroundColor Yellow
         Write-Host "    Expected locations:" -ForegroundColor Gray
         foreach ($sdkPath in $sdkPaths) {
             Write-Host "      - $sdkPath" -ForegroundColor DarkGray
         }
         Write-Host "    Please configure SDK in DevEco Studio:" -ForegroundColor Yellow
-        Write-Host "      Tools -> SDK Manager -> HarmonyOS SDK" -ForegroundColor Yellow
+        Write-Host "      Tools -> SDK 管理器 -> OpenHarmony SDK" -ForegroundColor Yellow
     }
 }
 else {
@@ -201,10 +201,10 @@ if (Test-Path $pubspecPath) {
     }
 }
 
-# Check HarmonyOS build profile
+# Check OpenHarmony build profile
 $buildProfilePath = Join-Path $projectRoot "ohos\build-profile.json5"
 if (Test-Path $buildProfilePath) {
-    Write-Host "  [OK] HarmonyOS build profile found" -ForegroundColor Green
+    Write-Host "  [OK] OpenHarmony build profile found" -ForegroundColor Green
     $buildProfile = Get-Content $buildProfilePath -Raw
     if ($buildProfile -match '"apiType":\s*"([^"]+)"') {
         $apiType = $matches[1]
@@ -227,7 +227,7 @@ if ($errors.Count -eq 0 -and $warnings.Count -eq 0) {
     Write-Host "  - Flutter SDK: Ready" -ForegroundColor White
     Write-Host "  - Node.js: Ready" -ForegroundColor White
     Write-Host "  - DevEco Studio: Ready" -ForegroundColor White
-    Write-Host "  - HarmonyOS SDK: Ready" -ForegroundColor White
+        Write-Host "  - OpenHarmony SDK: Ready" -ForegroundColor White
     Write-Host ""
     Write-Host "You can now start developing!" -ForegroundColor Cyan
     Write-Host ""
@@ -243,8 +243,8 @@ elseif ($errors.Count -eq 0) {
     }
     Write-Host ""
     Write-Host "Next steps:" -ForegroundColor Yellow
-    Write-Host "1. Configure HarmonyOS SDK in DevEco Studio" -ForegroundColor White
-    Write-Host "2. Tools -> SDK Manager -> HarmonyOS SDK" -ForegroundColor White
+        Write-Host "1. Configure OpenHarmony SDK in DevEco Studio" -ForegroundColor White
+        Write-Host "2. Tools -> SDK Manager -> OpenHarmony SDK" -ForegroundColor White
     exit 0
 }
 else {

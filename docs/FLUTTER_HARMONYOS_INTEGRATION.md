@@ -1,8 +1,8 @@
-# Flutter 与 HarmonyOS 集成指南
+# Flutter 与 OpenHarmony 集成指南
 
 ## 📋 概述
 
-本文档说明如何将 Flutter 应用集成到 HarmonyOS 项目中，并打包成 HAP 安装包。
+本文档说明如何将 Flutter 应用集成到 OpenHarmony 项目中，并打包成 HAP 安装包。
 
 ## 🎯 集成架构
 
@@ -10,7 +10,7 @@
 
 ```
 ┌─────────────────────────────────────┐
-│         HarmonyOS HAP              │
+│        OpenHarmony HAP             │
 ├─────────────────────────────────────┤
 │  ┌──────────────┐  ┌─────────────┐ │
 │  │  Flutter UI  │  │  ArkTS UI   │ │
@@ -22,7 +22,7 @@
 │  └────────────────────────────────┘ │
 │         │                            │
 │  ┌──────▼──────────────────────────┐ │
-│  │   HarmonyOS Native APIs         │ │
+│  │  OpenHarmony Native APIs        │ │
 │  └─────────────────────────────────┘ │
 └─────────────────────────────────────┘
 ```
@@ -40,7 +40,7 @@ harmony_flutter_demo/
 │       ├── kernel_blob.bin
 │       ├── isolate_snapshot_data
 │       └── flutter_assets/
-├── ohos/                        # HarmonyOS 项目
+├── ohos/                        # OpenHarmony 项目
 │   ├── entry/
 │   │   └── src/
 │   │       └── main/
@@ -71,20 +71,20 @@ Flutter 构建会生成以下资源：
 # 构建 Flutter 资源
 flutter build bundle --release
 
-# 复制到鸿蒙项目
+# 复制到 OpenHarmony 项目
 cp -r build/flutter_assets/* ohos/entry/src/main/assets/flutter/
 ```
 
 ### 3. Platform Channel 配置
 
-Flutter 和鸿蒙通过 Platform Channel 通信：
+Flutter 和 OpenHarmony 通过 Platform Channel 通信：
 
 **Flutter 端** (`lib/services/harmony_bridge.dart`):
 ```dart
 static const MethodChannel _channel = MethodChannel('com.example.harmony_flutter_demo/harmony_bridge');
 ```
 
-**鸿蒙端** (`ohos/entry/src/main/ets/utils/HarmonyBridgePlugin.ets`):
+**OpenHarmony 端** (`ohos/entry/src/main/ets/utils/OpenHarmonyBridgePlugin.ets`):
 ```typescript
 // 处理 Flutter 调用
 handleMethodCall(method: string, args: Object, callback: Function)
@@ -118,7 +118,7 @@ cd ohos
       "targets": [
         {
           "name": "default",
-          "runtimeOS": "HarmonyOS"
+          "runtimeOS": "OpenHarmony"
         }
       ]
     }
@@ -180,7 +180,7 @@ cd ohos
 
 1. **资源同步**: 每次修改 Flutter 代码后，需要重新构建并复制资源
 2. **路径一致性**: Flutter 资源必须放在 `assets/flutter/` 目录
-3. **Platform Channel**: 确保 Flutter 和鸿蒙端的 Channel 名称一致
+3. **Platform Channel**: 确保 Flutter 和 OpenHarmony 端的 Channel 名称一致
 4. **权限配置**: 在 `module.json5` 中配置所需权限
 5. **签名配置**: 发布版本需要在 DevEco Studio 中配置签名
 
@@ -188,7 +188,7 @@ cd ohos
 
 - [HAP 打包指南](HAP_BUILD_GUIDE.md) - 详细的打包步骤
 - [Platform Channel 文档](https://docs.flutter.dev/platform-integration/platform-channels)
-- [HarmonyOS 开发文档](https://developer.harmonyos.com/cn/documentation/)
+- [OpenHarmony 开发文档](https://docs.openharmony.cn/)
 
 ---
 

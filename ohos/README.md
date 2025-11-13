@@ -1,6 +1,6 @@
-# HarmonyOS 平台配置
+# OpenHarmony 平台配置
 
-此目录包含华为鸿蒙 (HarmonyOS) 平台的原生代码和配置文件。
+此目录包含 OpenHarmony 平台的原生代码和配置文件。
 
 ## 📁 目录说明
 
@@ -30,7 +30,7 @@
 
 脚本会自动：
 1. 构建 Flutter 应用资源
-2. 复制 Flutter 资源到鸿蒙项目
+2. 复制 Flutter 资源到 OpenHarmony 项目
 3. 提示使用 DevEco Studio 完成 HAP 打包
 
 ### 方式 2: 使用 DevEco Studio
@@ -50,7 +50,7 @@ cd ohos
 ## 📚 更多信息
 
 - [HAP 打包指南](../docs/HAP_BUILD_GUIDE.md) - 详细的打包步骤
-- [Flutter 集成指南](../docs/FLUTTER_HARMONYOS_INTEGRATION.md) - Flutter 与鸿蒙集成说明
+- [Flutter 集成指南](../docs/FLUTTER_HARMONYOS_INTEGRATION.md) - Flutter 与 OpenHarmony 集成说明
 - [项目主文档](../README.md) - 项目说明
 
 ---

@@ -1,14 +1,14 @@
-# Harmony Flutter Demo
+# OpenHarmony Flutter Demo
 
 <div align="center">
 
-![HarmonyOS](https://img.shields.io/badge/HarmonyOS-4.0-blue)
+![OpenHarmony](https://img.shields.io/badge/OpenHarmony-4.0-blue)
 ![Flutter](https://img.shields.io/badge/Flutter-3.35.7-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-**团队协作开发鸿蒙应用 | 使用 Cursor AI 辅助开发**
+**团队协作开发 OpenHarmony 应用 | 使用 Cursor AI 辅助开发**
 
-一个配置完整的 Flutter + HarmonyOS 混合开发项目，支持团队协作，利用 Cursor AI 提升开发效率。
+一个配置完整的 Flutter + OpenHarmony 混合开发项目，支持团队协作，利用 Cursor AI 提升开发效率。
 
 [快速开始](#-快速开始) • [团队协作](#-团队协作) • [Cursor 配置](#-cursor-配置) • [贡献指南](CONTRIBUTING.md)
 
@@ -20,7 +20,7 @@
 
 本项目旨在：
 
-- ✅ **团队协作开发鸿蒙应用** - 提供完整的项目结构和协作流程
+- ✅ **团队协作开发 OpenHarmony 应用** - 提供完整的项目结构和协作流程
 - ✅ **利用 Cursor AI 提升效率** - 配置 Cursor 使用鸿蒙文档和约束规则
 - ✅ **赚取开发者激励** - 通过团队协作和高效开发获得华为开发者激励
 
@@ -28,9 +28,9 @@
 
 ## ✨ 功能特性
 
-- ✅ **Flutter + HarmonyOS 混合开发** - Flutter UI + 鸿蒙原生能力
-- ✅ **Platform Channel 通信** - Flutter 与鸿蒙原生代码无缝通信
-- ✅ **Cursor AI 辅助开发** - 配置 Cursor 使用鸿蒙文档和约束规则
+- ✅ **Flutter + OpenHarmony 混合开发** - Flutter UI + OpenHarmony 原生能力
+- ✅ **Platform Channel 通信** - Flutter 与 OpenHarmony 原生代码无缝通信
+- ✅ **Cursor AI 辅助开发** - 配置 Cursor 使用 OpenHarmony 文档和约束规则
 - ✅ **团队协作支持** - GitHub 工作流、Issue 模板、PR 模板
 - ✅ **完整文档** - 开发指南、配置说明、最佳实践
 - ✅ **自动化脚本** - 环境检查、SDK 检查、快速启动
@@ -214,7 +214,7 @@ harmony_flutter_demo/
 项目使用 Platform Channel 实现 Flutter 与鸿蒙原生代码的通信：
 
 - **Flutter 端**: `lib/services/harmony_bridge.dart`
-- **鸿蒙端**: `ohos/entry/src/main/ets/utils/HarmonyBridgePlugin.ets`
+- **鸿蒙端**: `ohos/entry/src/main/ets/utils/OpenHarmonyBridgePlugin.ets`
 
 ---
 
@@ -308,7 +308,7 @@ harmony_flutter_demo/
 ### 官方资源
 - [华为开发者官网](https://developer.harmonyos.com/)
 - [Flutter 官方文档](https://flutter.dev/)
-- [HarmonyOS 开发文档](https://developer.harmonyos.com/cn/documentation/)
+- [OpenHarmony 开发文档](https://docs.openharmony.cn/)
 
 ### 工具和参考
 - [Cursor 官方文档](https://cursor.sh/docs)
@@ -342,6 +342,6 @@ harmony_flutter_demo/
 
 **让我们一起用 Cursor 高效开发鸿蒙应用，赚取开发者激励！** 🚀
 
-Made with ❤️ for HarmonyOS Development
+Made with ❤️ for OpenHarmony Development
 
 </div>

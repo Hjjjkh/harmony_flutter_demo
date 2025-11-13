@@ -4,10 +4,10 @@ import common from '@ohos.app.ability.common';
 import notificationManager from '@ohos.notificationManager';
 
 /**
- * Harmony Bridge Plugin
+ * OpenHarmony Bridge Plugin
  * 用于处理 Flutter Platform Channel 调用
  */
-export class HarmonyBridgePlugin {
+export class OpenHarmonyBridgePlugin {
   private context: common.Context;
 
   constructor(context: common.Context) {
@@ -43,8 +43,8 @@ export class HarmonyBridgePlugin {
   private getDeviceInfo(callback: (result: Object) => void): void {
     try {
       const deviceInfo = {
-        platform: 'HarmonyOS',
-        model: 'HarmonyOS Device',
+        platform: 'OpenHarmony',
+        model: 'OpenHarmony Device',
         version: '4.0.0',
         // 可以添加更多设备信息
       };
@@ -109,4 +109,5 @@ interface DistributedArgs {
   action: string;
   params?: Object;
 }
+
 

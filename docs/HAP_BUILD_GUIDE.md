@@ -1,8 +1,8 @@
-# HarmonyOS HAP 打包指南
+# OpenHarmony HAP 打包指南
 
 ## 📋 概述
 
-本文档说明如何将 Flutter 应用打包成 HarmonyOS HAP 安装包。
+本文档说明如何将 Flutter 应用打包成 OpenHarmony HAP 安装包。
 
 ## 🎯 打包流程
 
@@ -17,7 +17,7 @@
 
 脚本会自动：
 1. ✅ 构建 Flutter 应用资源
-2. ✅ 复制 Flutter 资源到鸿蒙项目
+2. ✅ 复制 Flutter 资源到 OpenHarmony 项目
 3. ✅ 提示使用 DevEco Studio 完成 HAP 打包
 
 #### 步骤 2: 使用 DevEco Studio 打包 HAP
@@ -118,7 +118,7 @@ Flutter 构建产物需要复制到 `ohos/entry/src/main/assets/flutter/` 目录
 
 ## 📚 参考文档
 
-- [HarmonyOS 应用打包指南](https://developer.harmonyos.com/cn/documentation/)
+- [OpenHarmony 应用打包指南](https://docs.openharmony.cn/)
 - [DevEco Studio 使用指南](https://developer.harmonyos.com/cn/documentation/)
 
 ---

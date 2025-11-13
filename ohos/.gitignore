@@ -1,6 +1,9 @@
-# HarmonyOS build files
+# OpenHarmony build files
 build/
 .hvigor/node_modules/
+.hvigor/cache/
+.hvigor/outputs/
+.hvigor/report/
 .hvigorw
 local.properties
 

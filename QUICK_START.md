@@ -90,7 +90,7 @@ flutter build app
 **A:** 通过 Platform Channel：
 1. 在 Flutter 中使用 `HarmonyBridge` 服务
 2. 在鸿蒙原生代码中实现对应的方法
-3. 参考 `lib/services/harmony_bridge.dart` 和 `ohos/entry/src/main/ets/utils/HarmonyBridgePlugin.ets`
+3. 参考 `lib/services/harmony_bridge.dart` 和 `ohos/entry/src/main/ets/utils/OpenHarmonyBridgePlugin.ets`
 
 ### Q: 依赖获取失败？
 

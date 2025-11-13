@@ -1,5 +1,5 @@
-# HarmonyOS HAP 打包脚本
-# 用于构建 HarmonyOS HAP 安装包
+# OpenHarmony HAP 打包脚本
+# 用于构建 OpenHarmony HAP 安装包
 
 param(
     [Parameter(Mandatory=$false)]
@@ -18,7 +18,7 @@ $ohosPath = Join-Path $projectRoot "ohos"
 $flutterBuildPath = Join-Path $projectRoot "build\flutter_assets"
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  HarmonyOS HAP 打包脚本" -ForegroundColor Cyan
+Write-Host "  OpenHarmony HAP 打包脚本" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "模式: $Mode" -ForegroundColor Yellow
@@ -106,7 +106,7 @@ try {
     }
     
     # 步骤 3: 构建 HAP
-    Write-Host "步骤 3: 构建 HarmonyOS HAP..." -ForegroundColor Yellow
+    Write-Host "步骤 3: 构建 OpenHarmony HAP..." -ForegroundColor Yellow
     Write-Host ""
     Write-Host "请使用以下方式之一构建 HAP:" -ForegroundColor Yellow
     Write-Host ""

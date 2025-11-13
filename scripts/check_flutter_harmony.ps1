@@ -1,8 +1,8 @@
-# Check if Flutter is HarmonyOS-specific branch
-# 检查 Flutter 是否为鸿蒙专属分支
+# Check if Flutter is HarmonyOS/OpenHarmony-specific branch
+# 检查 Flutter 是否为鸿蒙 / OpenHarmony 专属分支
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  Flutter HarmonyOS Branch Check" -ForegroundColor Cyan
+Write-Host "  Flutter HarmonyOS/OpenHarmony Branch Check" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -33,12 +33,12 @@ try {
             Write-Host "    $_" -ForegroundColor Gray
         }
         
-        # Check if it's HarmonyOS branch
+        # Check if it's HarmonyOS/OpenHarmony branch
         $isHarmonyOS = $false
         if ($gitRemote -match "harmony|openharmony|huawei") {
             $isHarmonyOS = $true
             Write-Host ""
-            Write-Host "  [INFO] This appears to be a HarmonyOS-specific Flutter branch" -ForegroundColor Green
+            Write-Host "  [INFO] This appears to be a HarmonyOS/OpenHarmony-specific Flutter branch" -ForegroundColor Green
         } else {
             Write-Host ""
             Write-Host "  [INFO] This is the standard Flutter repository (github.com/flutter/flutter)" -ForegroundColor Yellow
@@ -66,15 +66,15 @@ try {
 Write-Host ""
 
 # Check for HarmonyOS platform support
-Write-Host "4. Checking for HarmonyOS platform support..." -ForegroundColor Yellow
+Write-Host "4. Checking for HarmonyOS/OpenHarmony platform support..." -ForegroundColor Yellow
 $flutterDevices = flutter devices 2>&1
 $hasHarmonyOS = $flutterDevices -match "harmony|openharmony"
 if ($hasHarmonyOS) {
-    Write-Host "  [OK] HarmonyOS devices detected in flutter devices" -ForegroundColor Green
+    Write-Host "  [OK] HarmonyOS/OpenHarmony devices detected in flutter devices" -ForegroundColor Green
 } else {
-    Write-Host "  [INFO] No HarmonyOS devices detected (this is normal)" -ForegroundColor Yellow
-    Write-Host "    Standard Flutter does not directly support HarmonyOS platform" -ForegroundColor Gray
-    Write-Host "    HarmonyOS development is done through:" -ForegroundColor Gray
+    Write-Host "  [INFO] No HarmonyOS/OpenHarmony devices detected (this is normal)" -ForegroundColor Yellow
+    Write-Host "    Standard Flutter does not directly support HarmonyOS/OpenHarmony platform" -ForegroundColor Gray
+    Write-Host "    Native development is done through:" -ForegroundColor Gray
     Write-Host "    - DevEco Studio for native development" -ForegroundColor Gray
     Write-Host "    - Platform Channel for Flutter-Native communication" -ForegroundColor Gray
 }
@@ -85,9 +85,9 @@ Write-Host "5. Checking Flutter doctor output..." -ForegroundColor Yellow
 $flutterDoctor = flutter doctor -v 2>&1
 $hasHarmonyOSInfo = $flutterDoctor -match "harmony|openharmony"
 if ($hasHarmonyOSInfo) {
-    Write-Host "  [OK] HarmonyOS information found in flutter doctor" -ForegroundColor Green
+    Write-Host "  [OK] HarmonyOS/OpenHarmony information found in flutter doctor" -ForegroundColor Green
 } else {
-    Write-Host "  [INFO] No HarmonyOS information in flutter doctor (this is normal for standard Flutter)" -ForegroundColor Yellow
+    Write-Host "  [INFO] No HarmonyOS/OpenHarmony information in flutter doctor (this is normal for standard Flutter)" -ForegroundColor Yellow
 }
 Write-Host ""
 
@@ -101,24 +101,24 @@ Write-Host ""
 
 Write-Host "Flutter Type: " -NoNewline -ForegroundColor Yellow
 if ($isHarmonyOS) {
-    Write-Host "HarmonyOS-specific branch" -ForegroundColor Green
+    Write-Host "HarmonyOS/OpenHarmony-specific branch" -ForegroundColor Green
     Write-Host ""
-    Write-Host "This Flutter SDK is customized for HarmonyOS development." -ForegroundColor Green
+    Write-Host "This Flutter SDK is customized for HarmonyOS/OpenHarmony development." -ForegroundColor Green
 } else {
     Write-Host "Standard Flutter (official)" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "This is the standard Flutter SDK from:" -ForegroundColor White
     Write-Host "  https://github.com/flutter/flutter.git" -ForegroundColor Gray
     Write-Host ""
-    Write-Host "For HarmonyOS development:" -ForegroundColor Yellow
-    Write-Host "  - Use DevEco Studio for native HarmonyOS development" -ForegroundColor White
-    Write-Host "  - Use Platform Channel to communicate between Flutter and HarmonyOS" -ForegroundColor White
-    Write-Host "  - The ohos/ directory contains HarmonyOS native code" -ForegroundColor White
+    Write-Host "For OpenHarmony/HarmonyOS development:" -ForegroundColor Yellow
+    Write-Host "  - Use DevEco Studio for native OpenHarmony development" -ForegroundColor White
+    Write-Host "  - Use Platform Channel to communicate between Flutter and OpenHarmony" -ForegroundColor White
+    Write-Host "  - The ohos/ directory contains OpenHarmony native code" -ForegroundColor White
     Write-Host ""
-    Write-Host "Note: Standard Flutter does not directly support HarmonyOS as a platform," -ForegroundColor Gray
-    Write-Host "      but you can develop HarmonyOS apps using the hybrid approach:" -ForegroundColor Gray
+    Write-Host "Note: Standard Flutter does not directly support HarmonyOS/OpenHarmony as a platform," -ForegroundColor Gray
+    Write-Host "      but you can develop OpenHarmony/HarmonyOS apps using the hybrid approach:" -ForegroundColor Gray
     Write-Host "      1. Flutter UI layer (lib/ directory)" -ForegroundColor Gray
-    Write-Host "      2. HarmonyOS native layer (ohos/ directory)" -ForegroundColor Gray
+    Write-Host "      2. OpenHarmony native layer (ohos/ directory)" -ForegroundColor Gray
     Write-Host "      3. Platform Channel for communication" -ForegroundColor Gray
 }
 

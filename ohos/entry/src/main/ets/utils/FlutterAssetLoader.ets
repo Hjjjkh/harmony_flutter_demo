@@ -61,7 +61,7 @@ export class FlutterAssetLoader {
   async loadFlutterAsset(assetPath: string): Promise<ArrayBuffer | null> {
     try {
       // 实现资源加载逻辑
-      // 注意：需要根据 HarmonyOS 的资源加载 API 实现
+      // 注意：需要根据 OpenHarmony 的资源加载 API 实现
       return null;
     } catch (error) {
       console.error('Failed to load Flutter asset:', error);

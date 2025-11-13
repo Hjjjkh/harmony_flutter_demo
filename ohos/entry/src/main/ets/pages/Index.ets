@@ -4,7 +4,7 @@ import router from '@ohos.router';
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Harmony Flutter Demo';
+  @State message: string = 'OpenHarmony Flutter Demo';
 
   build() {
     Column() {
@@ -51,7 +51,7 @@ struct Index {
       .justifyContent(FlexAlign.Start)
 
       // 底部信息
-      Text('HarmonyOS + Flutter')
+      Text('OpenHarmony + Flutter')
         .fontSize(12)
         .fontColor('#8E8E93')
         .margin({ bottom: 40 })
