@@ -2,7 +2,7 @@
 
 ## 项目配置完成 ✅
 
-您的 Flutter 项目已配置为支持华为鸿蒙开发。以下是快速开始步骤：
+您的 Flutter 项目已配置为支持 OpenHarmony 开发。以下是快速开始步骤：
 
 ## 1. 环境检查
 
@@ -17,14 +17,14 @@ flutter pub get
 ## 2. 项目结构
 
 ```
-harmony_flutter_demo/
+openharmony_flutter_demo/
 ├── lib/                          # Flutter Dart 代码
 │   ├── main.dart                # 应用主入口
 │   ├── pages/                   # 页面
 │   │   └── harmony_demo_page.dart
 │   └── services/                # 服务
-│       └── harmony_bridge.dart  # 鸿蒙桥接服务
-├── ohos/                        # 鸿蒙平台配置
+│       └── harmony_bridge.dart  # OpenHarmony桥接服务
+├── ohos/                        # OpenHarmony平台配置
 │   ├── AppScope/               # 应用配置
 │   └── entry/                  # 入口模块
 └── pubspec.yaml                # 依赖配置
@@ -35,7 +35,7 @@ harmony_flutter_demo/
 ### 方式 1: 使用 Flutter CLI
 
 ```bash
-# 运行应用（如果 Flutter 支持鸿蒙平台）
+# 运行应用（如果 Flutter 支持OpenHarmony平台）
 flutter run
 
 # 构建应用
@@ -46,17 +46,17 @@ flutter build app
 
 1. 打开 DevEco Studio
 2. 选择 "Open" 并选择 `ohos` 目录
-3. 配置 HarmonyOS SDK
+3. 配置 OpenHarmony SDK
 4. 运行应用
 
 ## 4. 功能演示
 
 应用包含以下功能演示：
 
-- **设备信息获取**: 获取鸿蒙设备信息
+- **设备信息获取**: 获取OpenHarmony设备信息
 - **通知功能**: 显示原生通知
 - **权限请求**: 请求系统权限
-- **分布式能力**: 调用鸿蒙分布式能力
+- **分布式能力**: 调用OpenHarmony分布式能力
 
 ## 5. 下一步
 
@@ -64,12 +64,12 @@ flutter build app
    - 访问 https://developer.harmonyos.com/
    - 下载并安装 DevEco Studio
 
-2. **配置鸿蒙 SDK**
-   - 在 DevEco Studio 中配置 HarmonyOS SDK
+2. **配置OpenHarmony SDK**
+   - 在 DevEco Studio 中配置 OpenHarmony SDK
    - 设置 SDK 路径
 
 3. **配置依赖**
-   - 根据实际情况在 `pubspec.yaml` 中配置鸿蒙依赖
+   - 根据实际情况在 `pubspec.yaml` 中配置OpenHarmony依赖
    - 参考 `HARMONYOS_SETUP.md` 获取详细说明
 
 4. **开发功能**
@@ -79,17 +79,17 @@ flutter build app
 
 ## 6. 常见问题
 
-### Q: Flutter 不支持鸿蒙平台？
+### Q: Flutter 不支持OpenHarmony平台？
 
-**A:** 标准的 Flutter SDK 可能不直接支持鸿蒙。您需要：
-- 使用华为提供的 Flutter for HarmonyOS 版本
+**A:** 标准的 Flutter SDK 可能不直接支持OpenHarmony。您需要：
+- 使用华为提供的 Flutter for OpenHarmony 版本
 - 或通过 Android 兼容层运行
 
-### Q: 如何调用鸿蒙原生 API？
+### Q: 如何调用OpenHarmony原生 API？
 
 **A:** 通过 Platform Channel：
 1. 在 Flutter 中使用 `HarmonyBridge` 服务
-2. 在鸿蒙原生代码中实现对应的方法
+2. 在OpenHarmony原生代码中实现对应的方法
 3. 参考 `lib/services/harmony_bridge.dart` 和 `ohos/entry/src/main/ets/utils/OpenHarmonyBridgePlugin.ets`
 
 ### Q: 依赖获取失败？
@@ -102,14 +102,14 @@ flutter build app
 
 ## 7. 参考文档
 
-- [完整配置指南](HARMONYOS_SETUP.md)
+- [完整配置指南](OPENHARMONY_SETUP.md)
 - [华为开发者官网](https://developer.harmonyos.com/)
 - [Flutter 官方文档](https://flutter.dev/)
 
 ## 8. 技术支持
 
 如遇到问题，可以：
-1. 查看 `HARMONYOS_SETUP.md` 获取详细配置说明
+1. 查看 `OPENHARMONY_SETUP.md` 获取详细配置说明
 2. 访问华为开发者论坛
 3. 查阅官方文档
 

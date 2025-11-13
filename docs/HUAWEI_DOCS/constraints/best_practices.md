@@ -26,12 +26,12 @@
 
 ## 🔄 数据流
 
-### Flutter → HarmonyOS
+### Flutter → OpenHarmony
 1. Flutter 调用 Platform Channel
 2. 鸿蒙端处理请求
 3. 返回结果给 Flutter
 
-### HarmonyOS → Flutter
+### OpenHarmony → Flutter
 1. 鸿蒙端通过 Event Channel 发送事件
 2. Flutter 监听事件
 3. 更新 UI

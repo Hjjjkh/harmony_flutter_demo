@@ -26,12 +26,12 @@ AI 会自动创建文档文件、组织文档结构、更新索引并格式化�
 
 **示例 1: 添加文档内容**
 ```
-添加华为官方文档：HarmonyOS 应用开发指南
+添加华为官方文档：OpenHarmony 应用开发指南
 
-## HarmonyOS 应用开发指南
+## OpenHarmony 应用开发指南
 
 ### 1. 应用架构
-HarmonyOS 应用采用分层架构...
+OpenHarmony 应用采用分层架构...
 
 ### 2. 开发流程
 1. 创建项目
@@ -41,9 +41,9 @@ HarmonyOS 应用采用分层架构...
 
 **示例 2: 添加文档链接**
 ```
-添加华为官方文档：HarmonyOS API 参考
+添加华为官方文档：OpenHarmony API 参考
 链接：https://developer.harmonyos.com/cn/documentation/
-内容摘要：HarmonyOS 官方 API 参考文档
+内容摘要：OpenHarmony 官方 API 参考文档
 ```
 
 **示例 3: 添加约束规则**
@@ -90,7 +90,7 @@ HarmonyOS 应用采用分层架构...
 ## 📋 文档类型
 
 ### 官方文档
-- HarmonyOS 开发文档
+- OpenHarmony 开发文档
 - DevEco Studio 使用指南
 - API 参考文档
 - 设计指南
@@ -113,7 +113,7 @@ HarmonyOS 应用采用分层架构...
 ```
 docs/HUAWEI_DOCS/
 ├── official/                    # 官方文档
-│   ├── harmonyos/              # HarmonyOS 文档
+│   ├── harmonyos/              # OpenHarmony 文档
 │   ├── deveco/                 # DevEco Studio 文档
 │   └── flutter/                # Flutter 文档
 ├── constraints/                 # 约束规则

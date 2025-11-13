@@ -1,4 +1,4 @@
-name: harmony_flutter_demo
+name: openharmony_flutter_demo
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # ============================================
-  # 鸿蒙 (HarmonyOS) 专属依赖
+  # OpenHarmony 专属依赖
   # ============================================
   # 注意：以下依赖需要根据实际可用的包源进行配置
   # 方式1: 如果包已发布到 pub.dev，取消注释下面行

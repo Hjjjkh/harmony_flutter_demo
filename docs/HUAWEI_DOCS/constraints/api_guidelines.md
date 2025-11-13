@@ -94,7 +94,7 @@ export class MyPlugin {
 
 ## 📚 参考文档
 
-- [HarmonyOS API 参考](https://developer.harmonyos.com/cn/documentation/)
+- [OpenHarmony API 参考](https://developer.harmonyos.com/cn/documentation/)
 - [Platform Channel 文档](https://docs.flutter.dev/platform-integration/platform-channels)
 
 ---

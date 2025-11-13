@@ -28,7 +28,7 @@
 
 1. 访问 [华为开发者官网](https://developer.harmonyos.com/)
 2. 下载并安装 DevEco Studio
-3. 配置 HarmonyOS SDK
+3. 配置 OpenHarmony SDK
 
 ### 3. 安装 Node.js
 
@@ -90,9 +90,9 @@ npm --version
 2. 检查环境变量配置
 3. 运行 `flutter doctor -v` 查看详细信息
 
-### HarmonyOS SDK 问题
+### OpenHarmony SDK 问题
 
-**问题**: 找不到 HarmonyOS SDK
+**问题**: 找不到 OpenHarmony SDK
 
 **解决**:
 1. 在 DevEco Studio 中配置 SDK 路径

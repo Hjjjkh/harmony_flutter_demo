@@ -10,9 +10,9 @@
 docs/HUAWEI_DOCS/
 ├── README.md                    # 本文档
 ├── official/                    # 官方文档
-│   ├── harmonyos/              # HarmonyOS 官方文档
+│   ├── harmonyos/              # OpenHarmony 官方文档
 │   ├── deveco/                 # DevEco Studio 文档
-│   └── flutter/                # Flutter for HarmonyOS 文档（如果有）
+│   └── flutter/                # Flutter for OpenHarmony 文档（如果有）
 ├── constraints/                 # 约束规则
 │   ├── coding_standards.md     # 编码规范
 │   ├── api_guidelines.md       # API 使用指南
@@ -55,7 +55,7 @@ AI 会：
 ## 📋 文档类型
 
 ### 官方文档
-- HarmonyOS 开发文档
+- OpenHarmony 开发文档
 - DevEco Studio 使用指南
 - API 参考文档
 - 设计指南
@@ -106,9 +106,9 @@ AI 在编写代码时会：
 ## 🔍 文档索引
 
 ### 官方文档
-- [HarmonyOS 开发文档](official/harmonyos/) - 待添加
+- [OpenHarmony 开发文档](official/harmonyos/) - 待添加
 - [DevEco Studio 文档](official/deveco/) - 待添加
-- [Flutter for HarmonyOS](official/flutter/) - 待添加
+- [Flutter for OpenHarmony](official/flutter/) - 待添加
 
 ### 约束规则
 - [编码规范](constraints/coding_standards.md) - 待添加

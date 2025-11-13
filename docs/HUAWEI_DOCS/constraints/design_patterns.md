@@ -80,7 +80,7 @@ Repository - 数据仓库
 ## 📚 参考
 
 - [Flutter 架构模式](https://docs.flutter.dev/development/data-and-backend/state-mgmt/options)
-- [HarmonyOS 设计模式](https://developer.harmonyos.com/)
+- [OpenHarmony 设计模式](https://developer.harmonyos.com/)
 
 ---
 

@@ -1,8 +1,8 @@
-# 华为鸿蒙 Flutter 开发配置指南
+# OpenHarmony Flutter 开发配置指南
 
 ## 项目概述
 
-本项目已配置为支持华为鸿蒙 (HarmonyOS) 平台开发。项目使用 Flutter 框架，可以同时支持多个平台包括鸿蒙、Android、iOS 等。
+本项目已配置为支持 OpenHarmony 平台开发。项目使用 Flutter 框架，可以同时支持多个平台包括 OpenHarmony、Android、iOS 等。
 
 ## 目录结构
 
@@ -48,7 +48,7 @@ harmony_flutter_demo/
 
 1. 访问 [华为开发者官网](https://developer.harmonyos.com/)
 2. 下载并安装 DevEco Studio
-3. 配置 HarmonyOS SDK
+3. 配置 OpenHarmony SDK
 
 ### 步骤 2: 配置 Flutter 环境
 
@@ -141,7 +141,7 @@ flutter build app  # 鸿蒙（如果支持）
 ### 2. 使用 DevEco Studio 开发
 
 1. 使用 DevEco Studio 打开 `ohos` 目录
-2. 配置 HarmonyOS SDK
+2. 配置 OpenHarmony SDK
 3. 运行或调试应用
 
 ### 3. 混合开发
@@ -154,8 +154,8 @@ flutter build app  # 鸿蒙（如果支持）
 ### Q1: Flutter 不支持鸿蒙平台？
 
 A: 标准的 Flutter SDK 可能不直接支持鸿蒙平台。您需要：
-1. 使用华为提供的 Flutter for HarmonyOS 版本
-2. 或通过 Android 兼容层运行（HarmonyOS 早期版本支持 Android 应用）
+1. 使用华为提供的 Flutter for OpenHarmony 版本
+2. 或通过 Android 兼容层运行（OpenHarmony 早期版本支持 Android 应用）
 
 ### Q2: 如何调用鸿蒙原生 API？
 
@@ -176,7 +176,7 @@ A: 检查以下几点：
 
 - [华为开发者官网](https://developer.harmonyos.com/)
 - [Flutter 官方文档](https://flutter.dev/)
-- [HarmonyOS 开发文档](https://developer.harmonyos.com/cn/documentation/)
+- [OpenHarmony 开发文档](https://developer.harmonyos.com/cn/documentation/)
 - [OpenHarmony](https://www.openharmony.cn/)
 
 ## 下一步
@@ -190,13 +190,13 @@ A: 检查以下几点：
 
 1. **包名唯一性**: 确保 `bundleName` 在应用市场上唯一
 2. **权限申请**: 合理申请权限，避免过度申请
-3. **版本管理**: 保持 Flutter 和 HarmonyOS SDK 版本兼容
+3. **版本管理**: 保持 Flutter 和 OpenHarmony SDK 版本兼容
 4. **测试**: 在真实设备上测试应用功能
 
 ## 技术支持
 
 如遇到问题，可以：
-1. 查看 [HarmonyOS 开发者论坛](https://developer.huawei.com/consumer/cn/forum/)
+1. 查看 [OpenHarmony 开发者论坛](https://developer.huawei.com/consumer/cn/forum/)
 2. 查阅官方文档
 3. 联系技术支持
 

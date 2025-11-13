@@ -169,7 +169,7 @@ ohos/entry/src/main/ets/
    - 文本清理：规范化文本格式
 
 2. **FileManager**
-   - 文件选择：使用 HarmonyOS 文件选择器
+   - 文件选择：使用 OpenHarmony 文件选择器
    - 文件读取：支持 UTF-8 编码
    - 文件保存：保存用户数据
    - EPUB 识别：提示转换流程，避免乱码
@@ -230,7 +230,7 @@ ohos/entry/src/main/ets/
    - 数据存储在应用私有目录
 
 3. **兼容性**
-   - 支持 HarmonyOS API 9+
+   - 支持 OpenHarmony API 9+
    - 需要 DevEco Studio 4.0+
 
 ---

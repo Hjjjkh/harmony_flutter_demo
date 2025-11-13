@@ -1,4 +1,4 @@
-# 如何让 Cursor 精通鸿蒙开发？
+# 如何让 Cursor 精通 OpenHarmony 开发？
 
 > **参考文档** - 本文档为参考资源，帮助理解如何配置 Cursor  
 > 原文作者：北极的树  
@@ -7,17 +7,17 @@
 
 ## 📋 概述
 
-近两年，华为在加速推广鸿蒙生态，越来越多的应用需要适配或者重新开发鸿蒙版。鸿蒙官方也顺势推出了 AI 开发助手 DevEco CodeGenie，希望能帮开发者提效。但由于 CodeGenie 目前还不太好用，无论是问答还是代码补全，都频繁出错。这对于用惯了 Cursor 的开发者来说，难以忍受。
+近两年，华为在加速推广OpenHarmony生态，越来越多的应用需要适配或者重新开发OpenHarmony版。OpenHarmony官方也顺势推出了 AI 开发助手 DevEco CodeGenie，希望能帮开发者提效。但由于 CodeGenie 目前还不太好用，无论是问答还是代码补全，都频繁出错。这对于用惯了 Cursor 的开发者来说，难以忍受。
 
-那么，能直接使用 Cursor 来开发鸿蒙么？效果同样不理想。鸿蒙系统很新，主流 AI 大模型在训练时，相关的代码语料不足。这导致 Cursor 在生成鸿蒙代码时，表现也差强人意。
+那么，能直接使用 Cursor 来开发OpenHarmony么？效果同样不理想。OpenHarmony系统很新，主流 AI 大模型在训练时，相关的代码语料不足。这导致 Cursor 在生成OpenHarmony代码时，表现也差强人意。
 
-这篇文章，就来聊聊如何解决这个问题，让 Cursor 能为我们准确、高效地生成鸿蒙代码。
+这篇文章，就来聊聊如何解决这个问题，让 Cursor 能为我们准确、高效地生成OpenHarmony代码。
 
 ---
 
-## 🎯 如何让 Cursor 精通鸿蒙开发？
+## 🎯 如何让 Cursor 精通OpenHarmony开发？
 
-想让 Cursor 成为鸿蒙开发专家，需要从三个方面入手：
+想让 Cursor 成为OpenHarmony开发专家，需要从三个方面入手：
 
 1. **应用框架** - 官方文档
 2. **语法规范** - ArkTS 约束规则
@@ -27,7 +27,7 @@
 
 ## 1. 喂给它"应用框架"官方文档
 
-首先，要让 Cursor 了解鸿蒙的应用框架，比如 UI、网络、文件服务等。这样它才能在生成代码时，正确地引用各种库和组件。
+首先，要让 Cursor 了解OpenHarmony的应用框架，比如 UI、网络、文件服务等。这样它才能在生成代码时，正确地引用各种库和组件。
 
 可以看到，官方开发文档内容非常多，最适合使用 **RAG（检索增强）** 方案来解决。
 
@@ -35,7 +35,7 @@
 
 ### 配置步骤
 
-1. 在 Cursor 的设置中，添加鸿蒙官方文档入口的 URL
+1. 在 Cursor 的设置中，添加OpenHarmony官方文档入口的 URL
 
    ```
    https://developer.harmonyos.com/cn/documentation/
@@ -47,7 +47,7 @@
 
 ### 使用方法
 
-添加完成后，在与 AI 对话时，使用 `@ohos`（你自定义的文档名）就能引用鸿蒙知识库，让它基于官方开发文档来回答问题或生成代码。
+添加完成后，在与 AI 对话时，使用 `@ohos`（你自定义的文档名）就能引用OpenHarmony知识库，让它基于官方开发文档来回答问题或生成代码。
 
 **示例**：
 ```
@@ -58,7 +58,7 @@
 
 ## 2. 用 CursorRules 定义"ArkTS 语法规范"
 
-鸿蒙使用 **ArkTS** 语言开发。它基于 TypeScript，但增加了许多严格的语法约束，来保证程序更健壮、性能更高。
+OpenHarmony使用 **ArkTS** 语言开发。它基于 TypeScript，但增加了许多严格的语法约束，来保证程序更健壮、性能更高。
 
 如果直接让 Cursor 生成 ArkTS 代码，它经常会写出不符合约束规范的代码，我们还得手动修改。
 
@@ -113,7 +113,7 @@
 
 这些规则主要用于：
 - TypeScript 到 ArkTS 的迁移
-- HarmonyOS 应用开发
+- OpenHarmony 应用开发
 - 确保代码符合 ArkTS 规范
 
 这样一来，Cursor 生成的每一行代码都会戴上"紧箍咒"，符合 ArkTS 的规范。
@@ -122,7 +122,7 @@
 
 ## 3. 将最佳实践也沉淀为 CursorRules
 
-和语法规范一样，鸿蒙官方也提供了一系列最佳实践文档，指导我们写出更高质量的代码。
+和语法规范一样，OpenHarmony官方也提供了一系列最佳实践文档，指导我们写出更高质量的代码。
 
 处理这些文档，我们沿用 CursorRules 的思路，但方法却需要升级。
 
@@ -153,7 +153,7 @@
 
 为此，我开发了一个开源项目，实现了自动化处理：
 
-- ✅ 自动爬取鸿蒙官方文档
+- ✅ 自动爬取OpenHarmony官方文档
 - ✅ 调用 AI 总结 ArkTS 语法规范和各层级最佳实践
 - ✅ 自动生成可以直接使用的 CursorRules 文件
 
@@ -163,17 +163,17 @@
 
 如果你需要其他模块的规则，只需在配置文件 `harmony_modules_config.json` 中添加相应模块信息，然后运行项目即可。
 
-最终生成的规则文件都在 `final_cursor_rules` 文件夹里。你只需将内容复制到 Cursor Rules 中，并配置好应用范围，就能让 Cursor 真正懂鸿蒙，生成高质量代码。
+最终生成的规则文件都在 `final_cursor_rules` 文件夹里。你只需将内容复制到 Cursor Rules 中，并配置好应用范围，就能让 Cursor 真正懂OpenHarmony，生成高质量代码。
 
 ---
 
 ## 📊 总结
 
-通过 **"文档知识库 + 分层 CursorRules"** 这套组合拳，我们成功地让 Cursor 掌握了鸿蒙开发的方方面面，成为我们项目开发中的得力助手。
+通过 **"文档知识库 + 分层 CursorRules"** 这套组合拳，我们成功地让 Cursor 掌握了OpenHarmony开发的方方面面，成为我们项目开发中的得力助手。
 
 ### 核心方法
 
-1. **应用框架** → 使用 Cursor 文档知识库功能，添加鸿蒙官方文档 URL
+1. **应用框架** → 使用 Cursor 文档知识库功能，添加OpenHarmony官方文档 URL
 2. **语法规范** → 使用 CursorRules，定义 ArkTS 语法约束规则
 3. **最佳实践** → 使用分层 CursorRules，按模块组织最佳实践规则
 
@@ -186,7 +186,7 @@
 ## 🔗 相关资源
 
 - [项目地址](https://github.com/skindhu/harmony-cursor-rules) - 自动化生成 CursorRules 的开源项目
-- [HarmonyOS 官方文档](https://developer.harmonyos.com/cn/documentation/) - 鸿蒙开发文档
+- [OpenHarmony 官方文档](https://developer.harmonyos.com/cn/documentation/) - OpenHarmony开发文档
 - [从 TypeScript 到 ArkTS 的适配指南](https://developer.huawei.com/consumer/en/doc/harmonyos-guides-V14/typescript-to-arkts-migration-guide-V14) - 官方语法规范
 
 ---
